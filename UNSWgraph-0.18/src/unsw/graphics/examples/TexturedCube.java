@@ -71,6 +71,18 @@ public class TexturedCube extends Application3D {
                 .scale(0.5f, 0.5f, 0.5f);
         drawCube(gl, frame.rotateY(rotationY));
 
+        frame = CoordFrame3D.identity()
+        		.translate(-2, 0, -2)
+                .scale(0.5f, 0.5f, 0.5f);
+        
+        drawCube(gl, frame.rotateY(rotationY));
+        
+        frame = CoordFrame3D.identity()
+        		.translate(2, 0, -2)
+                .scale(0.5f, 0.5f, 0.5f);
+        
+        drawCube(gl, frame.rotateY(rotationY));
+        
         rotationY += 1;
     }
 
