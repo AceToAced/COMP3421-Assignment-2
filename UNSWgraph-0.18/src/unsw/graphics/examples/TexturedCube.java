@@ -17,6 +17,7 @@ import unsw.graphics.Shader;
 import unsw.graphics.Texture;
 import unsw.graphics.geometry.Point2D;
 import unsw.graphics.geometry.Point3D;
+import unsw.graphics.world.Camera;
 
 /**
  * A simple example that draws a textured cube using indexing.
@@ -35,7 +36,8 @@ public class TexturedCube extends Application3D {
     private int indicesName;
     
     private Texture texture;
-
+    private Camera cam;
+    
     public TexturedCube() {
         super("Texture Cube", 600, 600);
         rotationY = 0;
@@ -56,6 +58,7 @@ public class TexturedCube extends Application3D {
     public void display(GL3 gl) {
         super.display(gl);
         
+        cam.setView(gl);
         Shader.setInt(gl, "tex", 0);
         
         gl.glActiveTexture(GL.GL_TEXTURE0);
@@ -79,6 +82,11 @@ public class TexturedCube extends Application3D {
      * @param frame
      */
     private void drawCube(GL3 gl, CoordFrame3D frame) {
+    	
+
+    	
+    	Shader.setPenColor(gl, Color.BLUE);
+    	
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, verticesName);
         gl.glVertexAttribPointer(Shader.POSITION, 3, GL.GL_FLOAT, false, 0, 0);
         
@@ -90,11 +98,16 @@ public class TexturedCube extends Application3D {
         Shader.setModelMatrix(gl, frame.getMatrix());
         gl.glDrawElements(GL.GL_TRIANGLES, indicesBuffer.capacity(), 
                 GL.GL_UNSIGNED_INT, 0);
+        
     }
 
     @Override
     public void init(GL3 gl) {
         super.init(gl);
+        
+        cam = new Camera();
+        getWindow().addKeyListener(cam);
+        
         vertexBuffer = new Point3DBuffer(Arrays.asList(
                 new Point3D(-1,-1,1), 
                 new Point3D(-1,1,1),
