@@ -105,12 +105,12 @@ public class Camera implements KeyListener{
         case KeyEvent.VK_DOWN:
         	
         	System.out.println("UP - " + Position.getZ());
-        	
+        	Position = new Point3D(Position.getX(),Position.getY(),Position.getZ()+0.5f);
         	break;
         case KeyEvent.VK_UP:
             
         	System.out.println("UP - " + Position.getZ());
-        	
+        	Position = new Point3D(Position.getX(),Position.getY(),Position.getZ()-0.5f);
             break;
         }
 
