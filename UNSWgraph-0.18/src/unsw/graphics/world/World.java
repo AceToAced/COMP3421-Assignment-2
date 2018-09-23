@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import com.jogamp.opengl.GL3;
 
 import unsw.graphics.Application3D;
+import unsw.graphics.CoordFrame3D;
 import unsw.graphics.Matrix4;
 import unsw.graphics.Shader;
 
@@ -19,11 +20,12 @@ import unsw.graphics.Shader;
 public class World extends Application3D {
 
     private Terrain terrain;
+    private Camera cam;
 
     public World(Terrain terrain) {
     	super("Assignment 2", 800, 600);
         this.terrain = terrain;
-   
+        cam = new Camera();
     }
    
     /**
@@ -41,6 +43,13 @@ public class World extends Application3D {
 	@Override
 	public void display(GL3 gl) {
 		super.display(gl);
+		cam.setView(gl);
+		
+		CoordFrame3D frame = CoordFrame3D.identity()
+                .translate(0, 0, -2);
+                
+		terrain.draw(gl, frame);
+		
 	}
 
 	@Override
@@ -52,7 +61,8 @@ public class World extends Application3D {
 	@Override
 	public void init(GL3 gl) {
 		super.init(gl);
-		
+		terrain.Init(gl);
+		getWindow().addKeyListener(cam);
 		
 	}
 

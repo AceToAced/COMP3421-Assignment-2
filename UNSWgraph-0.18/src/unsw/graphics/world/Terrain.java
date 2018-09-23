@@ -2,11 +2,22 @@ package unsw.graphics.world;
 
 
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.util.GLBuffers;
+
+import unsw.graphics.CoordFrame2D;
+import unsw.graphics.CoordFrame3D;
+import unsw.graphics.Point3DBuffer;
+import unsw.graphics.Shader;
 import unsw.graphics.Vector3;
 import unsw.graphics.geometry.Point2D;
+import unsw.graphics.geometry.Point3D;
 
 
 
@@ -23,6 +34,11 @@ public class Terrain {
     private List<Tree> trees;
     private List<Road> roads;
     private Vector3 sunlight;
+    
+    private Point3DBuffer vertexBuffer;
+    private IntBuffer indicesBuffer;
+    private int verticesName;
+    private int indicesName;
 
     /**
      * Create a new terrain
@@ -39,6 +55,82 @@ public class Terrain {
         this.sunlight = sunlight;
     }
 
+    public void Init(GL3 gl){
+    	
+    	List<Point3D> vertexList = new ArrayList<Point3D>();
+    	List<Integer> IntList = new ArrayList<Integer>();
+    	
+    	for(int z = 0; z < depth ;z++){
+    		
+    		for(int x = 0; x < width ;x++){
+        		
+        		vertexList.add(new Point3D(x,altitudes[z][x],z));
+        		
+        		if(z < depth-1){
+        			
+        			if(x < width-1){
+        				
+        				IntList.add((z*width)+x);
+        				IntList.add(((z+1)*width)+x+1);
+        				IntList.add((z*width)+x+1);
+        			}
+        			
+        		}
+        		if(z > 0){
+        			
+        			if(x < width-1){
+        				
+        				IntList.add((z*width)+x);
+        				IntList.add((z*width)+x+1);
+        				IntList.add(((z-1)*width)+x);
+        			}
+        			
+        		}
+        	}
+    		
+    	}
+    	
+    	
+    	int indices[] = new int[IntList.size()];
+    	
+    	Iterator<Integer> iterator = IntList.iterator();
+        for (int i = 0; i < indices.length; i++)
+        {
+        	indices[i] = iterator.next().intValue();
+        }
+    	
+        
+        vertexBuffer = new Point3DBuffer(vertexList);
+        indicesBuffer = GLBuffers.newDirectIntBuffer(indices);
+    	
+    	int[] names = new int[2];
+        gl.glGenBuffers(2, names, 0);
+        
+        verticesName = names[0];
+        indicesName = names[1];
+        
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, verticesName);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, vertexBuffer.capacity() * 3 * Float.BYTES,
+                vertexBuffer.getBuffer(), GL.GL_STATIC_DRAW);
+        
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indicesName);
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer.capacity() * Integer.BYTES,
+                indicesBuffer, GL.GL_STATIC_DRAW);
+        
+    }
+    
+    public void draw(GL3 gl, CoordFrame3D frame){
+    	
+    	gl.glBindBuffer(GL.GL_ARRAY_BUFFER, verticesName);
+        gl.glVertexAttribPointer(Shader.POSITION, 3, GL.GL_FLOAT, false, 0, 0);
+        
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indicesName);
+        
+        Shader.setModelMatrix(gl, frame.getMatrix());
+        gl.glDrawElements(GL.GL_TRIANGLES, indicesBuffer.capacity(), 
+                GL.GL_UNSIGNED_INT, 0);
+    }
+    
     public List<Tree> trees() {
         return trees;
     }
