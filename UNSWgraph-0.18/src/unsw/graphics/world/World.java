@@ -66,12 +66,12 @@ public class World extends Application3D {
 		terrain.Init(gl);
 		getWindow().addKeyListener(cam);
 		
-		Shader shader = new Shader(gl, "shaders/vertex_phong.glsl",
-                "shaders/fragment_phong.glsl");
+		Shader shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
+                "shaders/fragment_tex_phong.glsl");
         shader.use(gl);
         
         // Set the lighting properties
-        Shader.setPoint3D(gl, "lightPos", new Point3D(0, 5, 0));
+        Shader.setPoint3D(gl, "lightPos", new Point3D(-2, 8, 0));
         Shader.setColor(gl, "lightIntensity", Color.WHITE);
         Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
         
