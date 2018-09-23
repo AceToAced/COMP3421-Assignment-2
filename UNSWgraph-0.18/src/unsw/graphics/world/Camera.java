@@ -124,6 +124,18 @@ public class Camera implements KeyListener{
         			,Position.getY()
         			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
             break;
+            
+        case KeyEvent.VK_SPACE:
+        
+        	Position = new Point3D(Position.getX(),Position.getY()-1,Position.getZ());
+        
+        	break;
+        	
+        case KeyEvent.VK_BACK_SPACE:
+            
+        	Position = new Point3D(Position.getX(),Position.getY()+1,Position.getZ());
+        
+        	break;
         }
 
         

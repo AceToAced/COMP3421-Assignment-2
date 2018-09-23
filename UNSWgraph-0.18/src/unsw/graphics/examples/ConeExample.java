@@ -70,7 +70,7 @@ public class ConeExample extends Application3D implements MouseListener{
         Shader.setColor(gl, "ambientCoeff", Color.WHITE);
         Shader.setColor(gl, "diffuseCoeff", new Color(0.5f, 0.5f, 0.5f));
         Shader.setColor(gl, "specularCoeff", new Color(0.8f, 0.8f, 0.8f));
-        Shader.setFloat(gl, "phongExp", 16f);
+        Shader.setFloat(gl, "phongExp", 10f);
         
         cone = makeCone(gl);
     }   

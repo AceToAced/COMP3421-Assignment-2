@@ -1,5 +1,6 @@
 package unsw.graphics.world;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -9,6 +10,7 @@ import unsw.graphics.Application3D;
 import unsw.graphics.CoordFrame3D;
 import unsw.graphics.Matrix4;
 import unsw.graphics.Shader;
+import unsw.graphics.geometry.Point3D;
 
 
 
@@ -46,7 +48,7 @@ public class World extends Application3D {
 		cam.setView(gl);
 		
 		CoordFrame3D frame = CoordFrame3D.identity()
-                .translate(0, 0, -2);
+                .translate(0, 0, 0);
                 
 		terrain.draw(gl, frame);
 		
@@ -63,6 +65,21 @@ public class World extends Application3D {
 		super.init(gl);
 		terrain.Init(gl);
 		getWindow().addKeyListener(cam);
+		
+		Shader shader = new Shader(gl, "shaders/vertex_phong.glsl",
+                "shaders/fragment_phong.glsl");
+        shader.use(gl);
+        
+        // Set the lighting properties
+        Shader.setPoint3D(gl, "lightPos", new Point3D(0, 5, 0));
+        Shader.setColor(gl, "lightIntensity", Color.WHITE);
+        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
+        
+        // Set the material properties
+        Shader.setColor(gl, "ambientCoeff", Color.WHITE);
+        Shader.setColor(gl, "diffuseCoeff", new Color(0.5f, 0.5f, 0.5f));
+        Shader.setColor(gl, "specularCoeff", new Color(0.8f, 0.8f, 0.8f));
+        Shader.setFloat(gl, "phongExp", 16f);
 		
 	}
 
