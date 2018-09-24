@@ -71,15 +71,15 @@ public class World extends Application3D {
         shader.use(gl);
         
         // Set the lighting properties
-        Shader.setPoint3D(gl, "lightPos", new Point3D(-2, 8, 0));
-        Shader.setColor(gl, "lightIntensity", Color.WHITE);
-        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
+        Shader.setPoint3D(gl, "lightPos", new Point3D(-2, 10, 0));
+        Shader.setColor(gl, "lightIntensity", new Color(0.6f, 0.6f, 0.6f));
+        Shader.setColor(gl, "ambientIntensity", new Color(0.4f, 0.4f, 0.4f));
         
         // Set the material properties
         Shader.setColor(gl, "ambientCoeff", Color.WHITE);
-        Shader.setColor(gl, "diffuseCoeff", new Color(0.5f, 0.5f, 0.5f));
-        Shader.setColor(gl, "specularCoeff", new Color(0.8f, 0.8f, 0.8f));
-        Shader.setFloat(gl, "phongExp", 16f);
+        Shader.setColor(gl, "diffuseCoeff", new Color(0.8f, 0.8f, 0.8f));
+        Shader.setColor(gl, "specularCoeff", new Color(0.2f, 0.2f, 0.2f));
+        Shader.setFloat(gl, "phongExp", 8f);
 		
 	}
 
