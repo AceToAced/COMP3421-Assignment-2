@@ -3,6 +3,7 @@ package unsw.graphics.world;
 
 
 import java.awt.Color;
+import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,6 +40,7 @@ public class Terrain {
     private Vector3 sunlight;
     
     private TriangleMesh ground;
+    private TriangleMesh treeMesh;
     private Texture texture;
     
 //    private Point3DBuffer vertexBuffer;
@@ -101,6 +103,14 @@ public class Terrain {
     	ground = new TriangleMesh(vertexList, IntList,true, texList);
     	ground.init(gl);
     	texture = new Texture(gl, "res/textures/grass.bmp", "bmp", false);
+    	
+    	try {
+			treeMesh = new TriangleMesh("res/models/tree.ply",true,true);
+			treeMesh.init(gl);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
     }
     
@@ -113,6 +123,19 @@ public class Terrain {
     	
     	Shader.setPenColor(gl, Color.WHITE);
     	ground.draw(gl,frame);
+    	
+    	
+    	
+    	if(treeMesh != null){
+    		
+    		for(int i = 0; i < trees.size(); i++){
+    			
+    			Point3D temp = trees.get(i).getPosition();
+    			treeMesh.draw(gl, frame.translate(temp));
+    			
+    		}
+    		
+    	}
     	
     }
     
@@ -173,8 +196,27 @@ public class Terrain {
      */
     public float altitude(float x, float z) {
         float altitude = 0;
-
+        
+        double xF = Math.floor(x);
+        double xC = Math.ceil(x);
+        
+        double zF = Math.floor(z);
+        double zC = Math.ceil(z);
+        
+        double xDiff = x-xF;
+        double zDiff = z-zF;
+        
+        float interpBot = (float)(getGridAltitude((int)xC,(int)zC) * xDiff)
+        		+(float)(getGridAltitude((int)xF,(int)zC) * (1-xDiff));
+        
+        float interpTop = (float)(getGridAltitude((int)xC,(int)zF) * xDiff)
+        		+(float)(getGridAltitude((int)xF,(int)zF) * (1-xDiff));
+        
+        altitude = (float)(interpTop * (1-zDiff) + interpBot * zDiff);
+        
         // TODO: Implement this
+        
+        System.out.println("X = " + x + ", Z =  "+ z + ", Alt = " + altitude);
         
         return altitude;
     }

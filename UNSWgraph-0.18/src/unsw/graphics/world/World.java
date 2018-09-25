@@ -47,8 +47,7 @@ public class World extends Application3D {
 		super.display(gl);
 		cam.setView(gl);
 		
-		CoordFrame3D frame = CoordFrame3D.identity()
-                .translate(0, 0, 0);
+		CoordFrame3D frame = CoordFrame3D.identity();
                 
 		terrain.draw(gl, frame);
 		
