@@ -46,6 +46,14 @@ public class Camera implements KeyListener{
     	
     }
 
+    public Point3D getPosition(){
+    	return Position;
+    }
+    
+    public void setHeight(float Y){
+    	Position = new Point3D( Position.getX(), Y, Position.getZ());
+    }
+    
     public void setView(GL3 gl) {
 
     	
@@ -56,7 +64,7 @@ public class Camera implements KeyListener{
                 .rotateX(-RotationX)
                 .rotateY(-RotationY)
     			.rotateZ(-RotationZ)
-                .translate(Position.getX(), Position.getY(),Position.getZ());
+                .translate(Position.getX(), -Position.getY(),Position.getZ());
     	
     	viewFrame = new CoordFrame3D(Aspect.getMatrix().multiply(viewFrame.getMatrix()));
     	

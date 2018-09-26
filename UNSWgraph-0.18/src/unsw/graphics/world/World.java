@@ -45,6 +45,9 @@ public class World extends Application3D {
 	@Override
 	public void display(GL3 gl) {
 		super.display(gl);
+		
+		cam.setHeight(terrain.altitude(cam.getPosition().getX(), cam.getPosition().getZ()));
+		
 		cam.setView(gl);
 		
 		CoordFrame3D frame = CoordFrame3D.identity();

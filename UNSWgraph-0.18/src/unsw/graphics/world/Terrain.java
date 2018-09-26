@@ -73,7 +73,7 @@ public class Terrain {
     		
     		for(int x = 0; x < width ;x++){
         		
-        		vertexList.add(new Point3D(x,altitudes[z][x],z));
+        		vertexList.add(new Point3D(x,altitudes[x][z],z));
         		texList.add(new Point2D((float)x/(width-1),(float)z/(depth-1)));
         		
         		if(z < depth-1){
@@ -81,7 +81,7 @@ public class Terrain {
         			if(x < width-1){
         				
         				IntList.add((z*width)+x);
-        				IntList.add(((z+1)*width)+x+1);
+        				IntList.add(((z+1)*width)+x);
         				IntList.add((z*width)+x+1);
         			}
         			
@@ -92,7 +92,7 @@ public class Terrain {
         				
         				IntList.add((z*width)+x);
         				IntList.add((z*width)+x+1);
-        				IntList.add(((z-1)*width)+x);
+        				IntList.add(((z-1)*width)+x+1);
         			}
         			
         		}
@@ -131,7 +131,7 @@ public class Terrain {
     		for(int i = 0; i < trees.size(); i++){
     			
     			Point3D temp = trees.get(i).getPosition();
-    			treeMesh.draw(gl, frame.translate(temp));
+    			treeMesh.draw(gl, frame.translate(temp).translate(0.0f, 5.0259f, 0.6f));
     			
     		}
     		
@@ -197,6 +197,11 @@ public class Terrain {
     public float altitude(float x, float z) {
         float altitude = 0;
         
+        if(z > depth || z < 0.0f || x > width || x < 0.0f){
+        	System.out.println("OUT RANGE Y = 0");
+        	return altitude;
+        }
+        
         double xF = Math.floor(x);
         double xC = Math.ceil(x);
         
@@ -205,16 +210,57 @@ public class Terrain {
         
         double xDiff = x-xF;
         double zDiff = z-zF;
-        
-        float interpBot = (float)(getGridAltitude((int)xC,(int)zC) * xDiff)
-        		+(float)(getGridAltitude((int)xF,(int)zC) * (1-xDiff));
-        
-        float interpTop = (float)(getGridAltitude((int)xC,(int)zF) * xDiff)
-        		+(float)(getGridAltitude((int)xF,(int)zF) * (1-xDiff));
-        
-        altitude = (float)(interpTop * (1-zDiff) + interpBot * zDiff);
-        
-        // TODO: Implement this
+
+        if(zDiff + xDiff == 1.0f){
+        	altitude = (float)(getGridAltitude((int)xC,(int)zF) * xDiff)
+        			+(float)(getGridAltitude((int)xF,(int)zC) * (1-xDiff));
+        }else if(zF == zC || xC == xF){
+        	
+        	if(zF == zC && xC == xF){
+        		
+        		altitude = (float)getGridAltitude((int)xF,(int)zC);
+        		System.out.println("ON A POINT Y = " + altitude);
+        		return altitude;
+        	}
+        	
+        	if(zF == zC){
+        		
+        		altitude = (float) (((xDiff) * getGridAltitude((int)xC,(int)zC)) 
+        				+ ((1-xDiff) * getGridAltitude((int)xF,(int)zC)));
+        		
+        	}else{
+        		
+        		altitude = (float) (((zDiff) * getGridAltitude((int)xC,(int)zC)) 
+        				+ ((1-zDiff) * getGridAltitude((int)xC,(int)zF)));
+        	}
+        	
+        }else{
+        	
+        	if(zDiff + xDiff < 1.0f){
+        		
+        		double Q1_Y = ((z-zF) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
+        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
+        		
+        		double Q2_Y = (zDiff * getGridAltitude((int)xF,(int)zC)) + ((1-zDiff) * getGridAltitude((int)xF,(int)zF));
+        		
+        		double Y = ((x - xF) / (xF+1-zDiff-xF) * Q1_Y) + ((xF+1-zDiff-x) / (xF+1-zDiff-xF) * Q2_Y);
+        		
+        		altitude = (float)Y;
+        		
+        	}else{
+        		
+        		double Q1_Y = ((z-zF) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
+        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
+        		
+        		double Q3_Y = (zDiff * getGridAltitude((int)xC,(int)zC)) + ((1-zDiff) * getGridAltitude((int)xC,(int)zF));
+        		
+        		double Y = ((x - xF+1-zDiff) / (xC-(xF+1-zDiff)) * Q3_Y) + ((xC-x) / (xC-(xF+1-zDiff)) * Q1_Y);
+        		
+        		altitude = (float)Y;
+        		
+        	}
+        	
+        }
         
         System.out.println("X = " + x + ", Z =  "+ z + ", Alt = " + altitude);
         
