@@ -3,6 +3,7 @@ package unsw.graphics.world;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import com.jogamp.opengl.GL3;
 
@@ -11,6 +12,7 @@ import unsw.graphics.CoordFrame3D;
 import unsw.graphics.Matrix4;
 import unsw.graphics.Shader;
 import unsw.graphics.geometry.Point3D;
+import unsw.graphics.geometry.TriangleMesh;
 
 
 
@@ -23,7 +25,8 @@ public class World extends Application3D {
 
     private Terrain terrain;
     private Camera cam;
-
+    private TriangleMesh Mesh;
+    
     public World(Terrain terrain) {
     	super("Assignment 2", 800, 600);
         this.terrain = terrain;
@@ -46,13 +49,15 @@ public class World extends Application3D {
 	public void display(GL3 gl) {
 		super.display(gl);
 		
-		cam.setHeight(terrain.altitude(cam.getPosition().getX(), cam.getPosition().getZ()));
+		cam.setHeight(terrain.altitude(cam.getPosition().getX(), cam.getPosition().getZ())+0.2f);
 		
 		cam.setView(gl);
 		
 		CoordFrame3D frame = CoordFrame3D.identity();
-                
+        
 		terrain.draw(gl, frame);
+		
+		Mesh.draw(gl,frame.translate(4, 0, 4));
 		
 	}
 
@@ -65,6 +70,14 @@ public class World extends Application3D {
 	@Override
 	public void init(GL3 gl) {
 		super.init(gl);
+		
+		try {
+			Mesh = new TriangleMesh("res/models/cube.ply",true,true);
+			Mesh.init(gl);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		terrain.Init(gl);
 		getWindow().addKeyListener(cam);
 		

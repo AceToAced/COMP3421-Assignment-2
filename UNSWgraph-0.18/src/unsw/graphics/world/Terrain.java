@@ -197,8 +197,8 @@ public class Terrain {
     public float altitude(float x, float z) {
         float altitude = 0;
         
-        if(z > depth || z < 0.0f || x > width || x < 0.0f){
-        	System.out.println("OUT RANGE Y = 0");
+        if(z > depth-1 || z < 0.0f || x > width-1 || x < 0.0f){
+        	System.out.println("OUT RANGE Y = 0 , x:" + x + " z:" + z);
         	return altitude;
         }
         

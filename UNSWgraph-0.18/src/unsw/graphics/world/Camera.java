@@ -47,6 +47,7 @@ public class Camera implements KeyListener{
     }
 
     public Point3D getPosition(){
+    	
     	return Position;
     }
     
@@ -64,7 +65,7 @@ public class Camera implements KeyListener{
                 .rotateX(-RotationX)
                 .rotateY(-RotationY)
     			.rotateZ(-RotationZ)
-                .translate(Position.getX(), -Position.getY(),Position.getZ());
+                .translate(-Position.getX(), -Position.getY(),-Position.getZ());
     	
     	viewFrame = new CoordFrame3D(Aspect.getMatrix().multiply(viewFrame.getMatrix()));
     	
@@ -119,18 +120,18 @@ public class Camera implements KeyListener{
         	radians = Math.toRadians(RotationY);
         	
         	//System.out.println("UP - " + Position.getZ());
-        	Position = new Point3D(Position.getX()-(MovementSpeed*(float)(Math.sin(radians)))
+        	Position = new Point3D(Position.getX()+(MovementSpeed*(float)(Math.sin(radians)))
         			,Position.getY()
-        			,Position.getZ()-(MovementSpeed*(float)(Math.cos(radians))));
+        			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
         	break;
         case KeyEvent.VK_UP:
             
         	radians = Math.toRadians(RotationY);
         	
         	//System.out.println("UP - " + Position.getZ());
-        	Position = new Point3D(Position.getX()+(MovementSpeed*(float)(Math.sin(radians)))
+        	Position = new Point3D(Position.getX()-(MovementSpeed*(float)(Math.sin(radians)))
         			,Position.getY()
-        			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
+        			,Position.getZ()-(MovementSpeed*(float)(Math.cos(radians))));
             break;
             
         case KeyEvent.VK_SPACE:
