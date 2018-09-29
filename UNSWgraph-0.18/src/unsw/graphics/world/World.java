@@ -49,7 +49,7 @@ public class World extends Application3D {
 	public void display(GL3 gl) {
 		super.display(gl);
 		
-		cam.setHeight(terrain.altitude(cam.getPosition().getX(), cam.getPosition().getZ())+0.2f);
+		cam.setHeight(terrain.altitude(cam.getPosition().getX(), cam.getPosition().getZ())+0.5f);
 		
 		cam.setView(gl);
 		
@@ -101,6 +101,6 @@ public class World extends Application3D {
 	@Override
 	public void reshape(GL3 gl, int width, int height) {
         super.reshape(gl, width, height);
-        Shader.setProjMatrix(gl, Matrix4.perspective(60, width/(float)height, 1, 100));
+        Shader.setProjMatrix(gl, Matrix4.perspective(60, width/(float)height, 0.1f, 100));
 	}
 }
