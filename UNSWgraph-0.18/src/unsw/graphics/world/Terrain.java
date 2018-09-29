@@ -212,6 +212,9 @@ public class Terrain {
         double zDiff = z-zF;
 
         if(zDiff + xDiff == 1.0f){
+        	
+        	System.out.print("4: ");
+        	
         	altitude = (float)(getGridAltitude((int)xC,(int)zF) * xDiff)
         			+(float)(getGridAltitude((int)xF,(int)zC) * (1-xDiff));
         }else if(zF == zC || xC == xF){
@@ -222,6 +225,8 @@ public class Terrain {
         		System.out.println("ON A POINT Y = " + altitude);
         		return altitude;
         	}
+        	
+        	System.out.print("3: ");
         	
         	if(zF == zC){
         		
@@ -238,23 +243,37 @@ public class Terrain {
         	
         	if(zDiff + xDiff < 1.0f){
         		
-        		double Q1_Y = ((z-zF) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
-        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
+        		System.out.print("1: ");
+        		
+//        		double Q1_Y = ((zDiff) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
+//        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
+
+        		double Q1_Y = ((zDiff) * getGridAltitude((int)xF,(int)zC))
+        				+ ((1-zDiff) * getGridAltitude((int)xC,(int)zF));
+
         		
         		double Q2_Y = (zDiff * getGridAltitude((int)xF,(int)zC)) + ((1-zDiff) * getGridAltitude((int)xF,(int)zF));
         		
-        		double Y = ((x - xF) / (xF+1-zDiff-xF) * Q1_Y) + ((xF+1-zDiff-x) / (xF+1-zDiff-xF) * Q2_Y);
+        		double Y = ((x - xF) / ((xF+1-zDiff)-xF) * Q1_Y) + (((xF+1-zDiff)-x) / ((xF+1-zDiff)-xF) * Q2_Y);
         		
         		altitude = (float)Y;
         		
         	}else{
         		
-        		double Q1_Y = ((z-zF) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
-        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
+        		System.out.print("2: ");
+        		
+//        		double Q1_Y = ((z-zF) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
+//        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
+        		
+        		double Q1_Y = ((zDiff) * getGridAltitude((int)xF,(int)zC))
+        				+ ((1-zDiff) * getGridAltitude((int)xC,(int)zF));
         		
         		double Q3_Y = (zDiff * getGridAltitude((int)xC,(int)zC)) + ((1-zDiff) * getGridAltitude((int)xC,(int)zF));
         		
-        		double Y = ((x - xF+1-zDiff) / (xC-(xF+1-zDiff)) * Q3_Y) + ((xC-x) / (xC-(xF+1-zDiff)) * Q1_Y);
+        		double Y1 = (x - (xF+1-zDiff)) / (xC-(xF+1-zDiff)) * Q3_Y;
+        		double Y2 = (xC-x) / (xC-(xF+1-zDiff)) * Q1_Y;
+        		
+        		double Y = Y1 + Y2;
         		
         		altitude = (float)Y;
         		
