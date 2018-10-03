@@ -198,7 +198,7 @@ public class Terrain {
         float altitude = 0;
         
         if(z > depth-1 || z < 0.0f || x > width-1 || x < 0.0f){
-        	System.out.println("OUT RANGE Y = 0 , x:" + x + " z:" + z);
+        	//System.out.println("OUT RANGE Y = 0 , x:" + x + " z:" + z);
         	return altitude;
         }
         
@@ -213,7 +213,7 @@ public class Terrain {
 
         if(zDiff + xDiff == 1.0f){
         	
-        	System.out.print("4: ");
+        	//System.out.print("4: ");
         	
         	altitude = (float)(getGridAltitude((int)xC,(int)zF) * xDiff)
         			+(float)(getGridAltitude((int)xF,(int)zC) * (1-xDiff));
@@ -222,11 +222,11 @@ public class Terrain {
         	if(zF == zC && xC == xF){
         		
         		altitude = (float)getGridAltitude((int)xF,(int)zC);
-        		System.out.println("ON A POINT Y = " + altitude);
+        		//System.out.println("ON A POINT Y = " + altitude);
         		return altitude;
         	}
         	
-        	System.out.print("3: ");
+        	//System.out.print("3: ");
         	
         	if(zF == zC){
         		
@@ -243,7 +243,7 @@ public class Terrain {
         	
         	if(zDiff + xDiff < 1.0f){
         		
-        		System.out.print("1: ");
+        		//System.out.print("1: ");
         		
 //        		double Q1_Y = ((zDiff) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
 //        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
@@ -260,7 +260,7 @@ public class Terrain {
         		
         	}else{
         		
-        		System.out.print("2: ");
+        		//System.out.print("2: ");
         		
 //        		double Q1_Y = ((z-zF) / (zC-zF) * getGridAltitude((int)xF,(int)zC))
 //        				+ ((zC-z) / (zC-zF) * getGridAltitude((int)xC,(int)zF));
@@ -281,7 +281,7 @@ public class Terrain {
         	
         }
         
-        System.out.println("X = " + x + ", Z =  "+ z + ", Alt = " + altitude);
+        //System.out.println("X = " + x + ", Z =  "+ z + ", Alt = " + altitude);
         
         return altitude;
     }

@@ -25,7 +25,6 @@ public class World extends Application3D {
 
     private Terrain terrain;
     private Camera cam;
-    private TriangleMesh Mesh;
     
     public World(Terrain terrain) {
     	super("Assignment 2", 800, 600);
@@ -57,8 +56,6 @@ public class World extends Application3D {
         
 		terrain.draw(gl, frame);
 		
-		Mesh.draw(gl,frame.translate(4, 0, 4));
-		
 	}
 
 	@Override
@@ -70,13 +67,6 @@ public class World extends Application3D {
 	@Override
 	public void init(GL3 gl) {
 		super.init(gl);
-		
-		try {
-			Mesh = new TriangleMesh("res/models/cube.ply",true,true);
-			Mesh.init(gl);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		terrain.Init(gl);
 		getWindow().addKeyListener(cam);
