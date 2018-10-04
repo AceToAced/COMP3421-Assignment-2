@@ -6,7 +6,8 @@ uniform vec4 input_color;
 uniform mat4 view_matrix;
 
 // Light properties
-uniform vec3 lightPos;
+//uniform vec3 lightPos;
+uniform vec3 lightDirection;
 uniform vec3 lightIntensity;
 uniform vec3 ambientIntensity;
 
@@ -26,7 +27,8 @@ in vec2 texCoordFrag;
 void main()
 {
     // Compute the s, v and r vectors
-    vec3 s = normalize(view_matrix*vec4(lightPos,1) - viewPosition).xyz;
+    //vec3 s = normalize(view_matrix*vec4(lightPos,1) - viewPosition).xyz;
+    vec3 s = normalize(vec4(lightDirection,1)).xyz;
     vec3 v = normalize(-viewPosition.xyz);
     vec3 r = normalize(reflect(-s,m));
 

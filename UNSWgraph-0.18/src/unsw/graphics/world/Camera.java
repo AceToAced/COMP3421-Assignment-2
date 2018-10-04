@@ -41,7 +41,7 @@ public class Camera implements KeyListener{
     	Position = new Point3D(0, 0, 0);
     
     	RotationX = 0;
-        RotationY = 0;
+        RotationY = 180;
         RotationZ = 0;
     	
     }
@@ -106,13 +106,13 @@ public class Camera implements KeyListener{
         switch(e.getKeyCode()) {
         case KeyEvent.VK_LEFT:
         	
-        	RotationY = MathUtil.normaliseAngle(RotationY+2);
+        	RotationY = MathUtil.normaliseAngle(RotationY+3);
         	//System.out.println(RotationY);
         	break;
         case KeyEvent.VK_RIGHT:
         	
         	
-        	RotationY = MathUtil.normaliseAngle(RotationY-2);
+        	RotationY = MathUtil.normaliseAngle(RotationY-3);
         	//System.out.println(RotationY);
         	break;
         case KeyEvent.VK_DOWN:
