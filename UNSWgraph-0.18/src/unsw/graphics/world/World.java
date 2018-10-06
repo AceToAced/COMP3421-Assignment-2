@@ -74,10 +74,10 @@ public class World extends Application3D {
 		Shader shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
                 "shaders/fragment_tex_phong.glsl");
         shader.use(gl);
-        
+
         // Set the lighting properties
         //Shader.setPoint3D(gl, "lightPos", terrain.getSunlight().asPoint3D());
-        Shader.setPoint3D(gl, "lightDirection", new Point3D(1, 0, 0));
+        Shader.setPoint3D(gl, "lightDirection", terrain.getSunlight().asPoint3D());
         Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
         Shader.setColor(gl, "ambientIntensity", new Color(0.1f, 0.1f, 0.1f));
         
