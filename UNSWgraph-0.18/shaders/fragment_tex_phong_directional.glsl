@@ -21,7 +21,6 @@ uniform sampler2D tex;
 
 in vec4 viewPosition;
 in vec3 m;
-in vec3 n; ////TEST
 
 in vec2 texCoordFrag;
 
