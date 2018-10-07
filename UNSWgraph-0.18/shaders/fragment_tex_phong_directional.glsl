@@ -27,19 +27,19 @@ in vec2 texCoordFrag;
 
 void main()
 {
+	vec3 normal = m;
     // Compute the s, v and r vectors
-    //vec3 sn = normalize(view_matrix*vec4(lightDirection,1)).xyz; //for specular
-    vec3 s = normalize(lightDirection);
-    vec3 v = normalize(-viewPosition.xyz);
+    //vec3 lightDir = normalize(view_matrix*vec4(lightDirection,1)).xyz; // test light direction for specular
+    vec3 lightDir = normalize(lightDirection);
+    vec3 viewDir = normalize(-viewPosition.xyz);
     
     vec3 ambient = ambientIntensity*ambientCoeff;
-    vec3 diffuse = max(lightIntensity*diffuseCoeff*dot(m,s), 0.0);
+    vec3 diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
     
     // specular shading
-    vec3 r = normalize(reflect(-s,m)); // Original r computation
-    // vec3 r = normalize(reflect(-sn,m)); // Test r
-    
-    vec3 specular = max(lightIntensity*specularCoeff*pow(dot(v, r),phongExp), 0.0);
+    vec3 reflectDir = normalize(reflect(-lightDir,m)); // Original reflectDir computation
+    // vec3 reflectDir = normalize(reflect(-sn,m)); // Test reflectDir
+    vec3 specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
 
     vec4 ambientAndDiffuse = vec4(ambient + diffuse, 1);
 
