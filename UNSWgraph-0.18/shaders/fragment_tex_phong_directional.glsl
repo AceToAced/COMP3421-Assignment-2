@@ -43,6 +43,7 @@ void main()
     	specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
     else
 		specular = vec3(0);
+
     vec4 ambientAndDiffuse = vec4(ambient + diffuse, 1);
 
     outputColor = ambientAndDiffuse*input_color*texture(tex, texCoordFrag) + vec4(specular, 1);
