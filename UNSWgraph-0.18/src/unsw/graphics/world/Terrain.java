@@ -42,11 +42,6 @@ public class Terrain {
     private TriangleMesh ground;
     private TriangleMesh treeMesh;
     private Texture texture;
-    
-//    private Point3DBuffer vertexBuffer;
-//    private IntBuffer indicesBuffer;
-//    private int verticesName;
-//    private int indicesName;
 
     /**
      * Create a new terrain
@@ -67,7 +62,7 @@ public class Terrain {
     	
     	List<Point3D> vertexList = new ArrayList<Point3D>();
     	List<Point2D> texList = new ArrayList<Point2D>();
-    	List<Integer> IntList = new ArrayList<Integer>();
+    	List<Integer> indicesList = new ArrayList<Integer>();
     	
     	for(int z = 0; z < depth ;z++){
     		
@@ -80,9 +75,9 @@ public class Terrain {
         			
         			if(x < width-1){
         				
-        				IntList.add((z*width)+x);
-        				IntList.add(((z+1)*width)+x);
-        				IntList.add((z*width)+x+1);
+        				indicesList.add((z*width)+x);
+        				indicesList.add(((z+1)*width)+x);
+        				indicesList.add((z*width)+x+1);
         			}
         			
         		}
@@ -90,9 +85,9 @@ public class Terrain {
         			
         			if(x < width-1){
         				
-        				IntList.add((z*width)+x);
-        				IntList.add((z*width)+x+1);
-        				IntList.add(((z-1)*width)+x+1);
+        				indicesList.add((z*width)+x);
+        				indicesList.add((z*width)+x+1);
+        				indicesList.add(((z-1)*width)+x+1);
         			}
         			
         		}
@@ -100,7 +95,7 @@ public class Terrain {
     		
     	}
     	
-    	ground = new TriangleMesh(vertexList, IntList,true, texList);
+    	ground = new TriangleMesh(vertexList, indicesList,true, texList);
     	ground.init(gl);
     	texture = new Texture(gl, "res/textures/grass.bmp", "bmp", false);
     	
