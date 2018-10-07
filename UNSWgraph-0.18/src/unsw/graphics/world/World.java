@@ -76,9 +76,7 @@ public class World extends Application3D {
         shader.use(gl);
 
         // Set the lighting properties
-        //Shader.setPoint3D(gl, "lightPos", terrain.getSunlight().asPoint3D());
         Shader.setPoint3D(gl, "lightDirection", terrain.getSunlight().asPoint3D());
-        //Shader.setPoint3D(gl, "lightDirection", new Point3D(1, 0, 0)); /////TEST
         Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
         Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
         
@@ -86,7 +84,7 @@ public class World extends Application3D {
         Shader.setColor(gl, "ambientCoeff", new Color(0.6f, 0.6f, 0.6f));
         Shader.setColor(gl, "diffuseCoeff", new Color(0.6f, 0.6f, 0.6f));
         Shader.setColor(gl, "specularCoeff", new Color(0.5f, 0.5f, 0.5f));
-        Shader.setFloat(gl, "phongExp", 10f);
+        Shader.setFloat(gl, "phongExp", 32f);
 		
 	}
 

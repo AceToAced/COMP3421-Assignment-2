@@ -27,19 +27,22 @@ in vec2 texCoordFrag;
 void main()
 {
 	vec3 normal = m;
-    // Compute the s, v and r vectors
-    //vec3 lightDir = normalize(view_matrix*vec4(lightDirection,1)).xyz; // test light direction for specular
-    vec3 lightDir = normalize(lightDirection);
+    // Compute the light direction and view direction vectors
+    vec3 lightDir = normalize(lightDirection.xyz);
     vec3 viewDir = normalize(-viewPosition.xyz);
     
     vec3 ambient = ambientIntensity*ambientCoeff;
     vec3 diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
     
-    // specular shading
-    vec3 reflectDir = normalize(reflect(-lightDir,m)); // Original reflectDir computation
-    // vec3 reflectDir = normalize(reflect(-sn,m)); // Test reflectDir
-    vec3 specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
-
+    // Specular shading
+    // Compute the reflection vector 
+    vec3 reflectDir = normalize(reflect(-lightDir,m));
+    // Only show specular reflections for the front face
+    vec3 specular;
+    if (dot(m,s) > 0) 
+    	specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
+	else 
+		specular = vec3(0);
     vec4 ambientAndDiffuse = vec4(ambient + diffuse, 1);
 
     outputColor = ambientAndDiffuse*input_color*texture(tex, texCoordFrag) + vec4(specular, 1);
