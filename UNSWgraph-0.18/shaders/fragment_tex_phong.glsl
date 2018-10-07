@@ -21,23 +21,25 @@ uniform sampler2D tex;
 
 in vec4 viewPosition;
 in vec3 m;
+in vec3 n;
 
 in vec2 texCoordFrag;
 
 void main()
 {
     // Compute the s, v and r vectors
-    //vec3 s = normalize(view_matrix*vec4(lightPos,1) - viewPosition).xyz;
+    //vec3 sn = normalize(view_matrix*vec4(lightDirection,1) - viewPosition).xyz; //for specular
+    vec3 sn = normalize(view_matrix*vec4(lightDirection,1)).xyz; //for specular
     vec3 s = normalize(vec4(lightDirection,1)).xyz;
     vec3 v = normalize(-viewPosition.xyz);
-    vec3 r = normalize(reflect(-s,m));
+    vec3 r = normalize(reflect(-sn,m));
 
     vec3 ambient = ambientIntensity*ambientCoeff;
     vec3 diffuse = max(lightIntensity*diffuseCoeff*dot(m,s), 0.0);
     vec3 specular;
 
     // Only show specular reflections for the front face
-    if (dot(m,s) > 0)
+    if (dot(m,sn) > 0)
         specular = max(lightIntensity*specularCoeff*pow(dot(r,v),phongExp), 0.0);
     else
         specular = vec3(0);
