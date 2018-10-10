@@ -83,7 +83,7 @@ public class World extends Application3D {
         // Set the material properties
         Shader.setColor(gl, "ambientCoeff", new Color(0.6f, 0.6f, 0.6f));
         Shader.setColor(gl, "diffuseCoeff", new Color(0.6f, 0.6f, 0.6f));
-        Shader.setColor(gl, "specularCoeff", new Color(0.5f, 0.5f, 0.5f));
+        Shader.setColor(gl, "specularCoeff", new Color(0.1f, 0.1f, 0.1f));
         Shader.setFloat(gl, "phongExp", 32f);
 		
 	}
