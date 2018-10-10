@@ -28,7 +28,7 @@ void main()
 {
 	vec3 normal = m;
     // Compute the light direction and view direction vectors
-    vec3 lightDir = normalize(lightDirection.xyz);
+    vec3 lightDir = (normalize(view_matrix * vec4(lightDirection, 0))).xyz;
     vec3 viewDir = normalize(-viewPosition.xyz);
     
     vec3 ambient = ambientIntensity*ambientCoeff;
