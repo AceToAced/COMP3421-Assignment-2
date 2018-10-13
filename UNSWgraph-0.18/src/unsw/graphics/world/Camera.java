@@ -58,6 +58,12 @@ public class Camera{// implements KeyListener{
     	
     }
     
+    public void setPosition(Point3D point){
+    	
+    	Position = point;
+    	
+    }
+    
     public Point3D getPosition(){
     	
     	return Position;
@@ -81,9 +87,9 @@ public class Camera{// implements KeyListener{
     	
     	float Gscale = ava.getScale()*scale;
     	Matrix4 mat = frame.getMatrix();
-    	System.out.println(mat.toString());
-    	System.out.println("X:"+mat.getValues()[12] + ", Y:"+mat.getValues()[13] + ", Z:"+mat.getValues()[14]);
-    	System.out.println("---------");
+    	//System.out.println(mat.toString());
+    	//System.out.println("X:"+mat.getValues()[12] + ", Y:"+mat.getValues()[13] + ", Z:"+mat.getValues()[14]);
+    	//System.out.println("---------");
     	
     	Point3D Gposition = new Point3D(mat.getValues()[12], mat.getValues()[13], mat.getValues()[14]);
     	

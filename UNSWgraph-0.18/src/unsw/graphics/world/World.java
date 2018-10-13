@@ -49,7 +49,7 @@ public class World extends Application3D {
 	public void display(GL3 gl) {
 		super.display(gl);
 		
-		Ava.setHeight(terrain.altitude(Ava.getPosition().getX(), Ava.getPosition().getZ())+0.5f);
+		Ava.setHeight(terrain.altitude(Ava.getPosition().getX(), Ava.getPosition().getZ()));//+0.5f);
 		
 		CoordFrame3D frame = CoordFrame3D.identity();
 		

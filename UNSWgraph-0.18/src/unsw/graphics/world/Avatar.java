@@ -24,6 +24,7 @@ public class Avatar implements KeyListener {
     private Camera cam;
     private TriangleMesh avatar;
     private Texture texture;
+    private boolean firstPerson = false;
     
     private float RotationX;
     private float RotationY;
@@ -32,7 +33,7 @@ public class Avatar implements KeyListener {
 	
     public Avatar() {
     	
-    	cam = new Camera(0,2,-2);
+    	cam = new Camera(0,0.3f,-0.7f);
     	
     	myAspectRatio = 1.0f;
     	scale = 1;
@@ -46,7 +47,7 @@ public class Avatar implements KeyListener {
     
     public Avatar(float x, float y, float z) {
     	
-    	cam = new Camera(0,2,-2);
+    	cam = new Camera(0,0.3f,-0.7f);
     	
     	myAspectRatio = 1.0f;
     	scale = 1;
@@ -61,7 +62,7 @@ public class Avatar implements KeyListener {
     public void Init(GL3 gl){
     	
     	try {
-			avatar = new TriangleMesh("res/models/cube.ply",true,true);
+			avatar = new TriangleMesh("res/models/bunny.ply",true,true);
 			avatar.init(gl);
 		} catch (IOException e) {
 			System.out.println("Avatar file not found/couldnt load file");
@@ -70,27 +71,29 @@ public class Avatar implements KeyListener {
 			
 		}
     	
-    	texture = new Texture(gl, "res/textures/grass.bmp", "bmp", false);
+    	texture = new Texture(gl, "res/textures/BrightPurpleMarble.png", "png", false);
     	
     }
     
     public void draw(GL3 gl,CoordFrame3D frame){
     	
-    	Shader.setInt(gl, "tex", 0);
-        
-        gl.glActiveTexture(GL.GL_TEXTURE0);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, texture.getId());
+    	if(!firstPerson){
     	
-    	Shader.setPenColor(gl, Color.WHITE);
-    	
-    	System.out.println("x: " + Position.getX() + ", y:" + Position.getY() + ", z:" + Position.getZ());
-    	
-    	avatar.draw(gl,frame.translate(Position)
-    			.rotateX(RotationX)
-    			.rotateY(RotationY)
-    			.rotateZ(RotationZ)
-    			.scale(scale, scale, scale));
-    	
+	    	Shader.setInt(gl, "tex", 0);
+	        
+	        gl.glActiveTexture(GL.GL_TEXTURE0);
+	        gl.glBindTexture(GL.GL_TEXTURE_2D, texture.getId());
+	    	
+	    	Shader.setPenColor(gl, Color.WHITE);
+	    	
+	    	//System.out.println("x: " + Position.getX() + ", y:" + Position.getY() + ", z:" + Position.getZ());
+	    	
+	    	avatar.draw(gl,frame.translate(Position)
+	    			.rotateX(RotationX)
+	    			.rotateY(MathUtil.normaliseAngle(RotationY+90))
+	    			.rotateZ(RotationZ)
+	    			.scale(scale, scale, scale));
+    	}
     }
     
     public void setHeight(float Y){
@@ -171,16 +174,19 @@ public class Avatar implements KeyListener {
         			,Position.getY()
         			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
             break;
-            
-        case KeyEvent.VK_SPACE:
-        
-        	Position = new Point3D(Position.getX(),Position.getY()-1,Position.getZ());
-        
-        	break;
         	
-        case KeyEvent.VK_BACK_SPACE:
+        case KeyEvent.VK_F:
             
-        	Position = new Point3D(Position.getX(),Position.getY()+1,Position.getZ());
+        	if(firstPerson){
+        		
+        		firstPerson = false;
+        		cam.setPosition(new Point3D(0,0.3f,-0.7f));
+        		
+        	}else{
+        		
+        		firstPerson = true;
+        		cam.setPosition(new Point3D(0,0.2f,0));
+        	}
         
         	break;
         }
