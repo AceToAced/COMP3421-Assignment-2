@@ -112,14 +112,6 @@ public class Avatar implements KeyListener {
     			.rotateZ(RotationZ)
     			.scale(scale, scale, scale), this);
     	
-    	
-//    	cam.setView(gl, frame.scale(1/scale, 1/scale, 1/scale)
-//    			.rotateX(-RotationX)
-//    			.rotateY(-RotationY)
-//    			.rotateZ(-RotationZ)
-//    			.translate(-Position.getX(), -Position.getY(),-Position.getZ())
-//    			);
-    	
     }
     
     public float getRotx(){
@@ -143,24 +135,19 @@ public class Avatar implements KeyListener {
     	
     	double radians;
     	
-    	
         switch(e.getKeyCode()) {
         case KeyEvent.VK_LEFT:
         	
         	RotationY = MathUtil.normaliseAngle(RotationY+3);
-        	//System.out.println(RotationY);
         	break;
         case KeyEvent.VK_RIGHT:
-        	
-        	
+        		
         	RotationY = MathUtil.normaliseAngle(RotationY-3);
-        	//System.out.println(RotationY);
         	break;
         case KeyEvent.VK_DOWN:
         	
         	radians = Math.toRadians(RotationY);
-        	
-        	//System.out.println("UP - " + Position.getZ());
+        	      	
         	Position = new Point3D(Position.getX()-(MovementSpeed*(float)(Math.sin(radians)))
         			,Position.getY()
         			,Position.getZ()-(MovementSpeed*(float)(Math.cos(radians))));
@@ -169,7 +156,6 @@ public class Avatar implements KeyListener {
             
         	radians = Math.toRadians(RotationY);
         	
-        	//System.out.println("UP - " + Position.getZ());
         	Position = new Point3D(Position.getX()+(MovementSpeed*(float)(Math.sin(radians)))
         			,Position.getY()
         			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
@@ -185,7 +171,7 @@ public class Avatar implements KeyListener {
         	}else{
         		
         		firstPerson = true;
-        		cam.setPosition(new Point3D(0,0.2f,0));
+        		cam.setPosition(new Point3D(0,0.25f,0));
         	}
         
         	break;
