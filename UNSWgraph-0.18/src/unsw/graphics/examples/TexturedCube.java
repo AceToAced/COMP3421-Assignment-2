@@ -58,7 +58,7 @@ public class TexturedCube extends Application3D {
     public void display(GL3 gl) {
         super.display(gl);
         
-        cam.setView(gl);
+        cam.setView(gl, CoordFrame3D.identity());
         Shader.setInt(gl, "tex", 0);
         
         gl.glActiveTexture(GL.GL_TEXTURE0);
@@ -117,8 +117,8 @@ public class TexturedCube extends Application3D {
     public void init(GL3 gl) {
         super.init(gl);
         
-        cam = new Camera();
-        getWindow().addKeyListener(cam);
+        //cam = new Camera();
+        //getWindow().addKeyListener(cam);
         
         vertexBuffer = new Point3DBuffer(Arrays.asList(
                 new Point3D(-1,-1,1), 

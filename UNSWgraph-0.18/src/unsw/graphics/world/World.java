@@ -24,12 +24,13 @@ import unsw.graphics.geometry.TriangleMesh;
 public class World extends Application3D {
 
     private Terrain terrain;
-    private Camera cam;
+    private Avatar Ava;
     
     public World(Terrain terrain) {
     	super("Assignment 2", 800, 600);
         this.terrain = terrain;
-        cam = new Camera();
+        
+        Ava = new Avatar();
     }
    
     /**
@@ -48,11 +49,12 @@ public class World extends Application3D {
 	public void display(GL3 gl) {
 		super.display(gl);
 		
-		cam.setHeight(terrain.altitude(cam.getPosition().getX(), cam.getPosition().getZ())+0.5f);
-		
-		cam.setView(gl);
+		Ava.setHeight(terrain.altitude(Ava.getPosition().getX(), Ava.getPosition().getZ())+0.5f);
 		
 		CoordFrame3D frame = CoordFrame3D.identity();
+		
+		Ava.setView(gl, frame);
+		Ava.draw(gl, frame);
         
 		terrain.draw(gl, frame);
 		
@@ -68,8 +70,10 @@ public class World extends Application3D {
 	public void init(GL3 gl) {
 		super.init(gl);
 		
+		Ava.Init(gl);
 		terrain.Init(gl);
-		getWindow().addKeyListener(cam);
+		
+		getWindow().addKeyListener(Ava);
 		
 		Shader shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
                 "shaders/fragment_tex_phong_directional.glsl");

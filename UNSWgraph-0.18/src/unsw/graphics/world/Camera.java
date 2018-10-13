@@ -4,10 +4,8 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.opengl.GL3;
 import unsw.graphics.CoordFrame3D;
-import unsw.graphics.Matrix3;
+import unsw.graphics.Matrix4;
 import unsw.graphics.Shader;
-import unsw.graphics.Vector3;
-import unsw.graphics.geometry.Point2D;
 import unsw.graphics.geometry.Point3D;
 import unsw.graphics.scene.MathUtil;
 
@@ -20,7 +18,7 @@ import unsw.graphics.scene.MathUtil;
  * @author malcolmr
  * @author Robert Clifton-Everest
  */
-public class Camera implements KeyListener{
+public class Camera{// implements KeyListener{
     
     /**
      * The aspect ratio is the ratio of the width of the window to the height.
@@ -28,6 +26,7 @@ public class Camera implements KeyListener{
     private float myAspectRatio;
     private float scale;
     private Point3D Position;
+    private float startRotation = 180.0f;
     
     private float RotationX;
     private float RotationY;
@@ -41,11 +40,24 @@ public class Camera implements KeyListener{
     	Position = new Point3D(0, 0, 0);
     
     	RotationX = 0;
-        RotationY = 180;
+        RotationY = startRotation;
         RotationZ = 0;
     	
     }
 
+    
+    public Camera(float x, float y , float z) {
+    	
+    	myAspectRatio = 1.0f;
+    	scale = 1;
+    	Position = new Point3D(x, y, z);
+    
+    	RotationX = 0;
+        RotationY = startRotation;
+        RotationZ = 0;
+    	
+    }
+    
     public Point3D getPosition(){
     	
     	return Position;
@@ -55,19 +67,42 @@ public class Camera implements KeyListener{
     	Position = new Point3D( Position.getX(), Y, Position.getZ());
     }
     
-    public void setView(GL3 gl) {
+    public void setView(GL3 gl, CoordFrame3D frame, Avatar ava) {
 
     	
-    	CoordFrame3D Aspect = CoordFrame3D.identity().scale(1/myAspectRatio, 1,1);
+    	frame = frame.translate(Position)
+    			.rotateX(RotationX)
+    			.rotateY(RotationY)
+    			.rotateZ(RotationZ)
+    			.scale(scale, scale, scale);
     	
-    	CoordFrame3D viewFrame = CoordFrame3D.identity()
-                .scale(1/scale, 1/scale, 1/scale)
-                .rotateX(-RotationX)
-                .rotateY(-RotationY)
-    			.rotateZ(-RotationZ)
-                .translate(-Position.getX(), -Position.getY(),-Position.getZ());
     	
-    	viewFrame = new CoordFrame3D(Aspect.getMatrix().multiply(viewFrame.getMatrix()));
+    	CoordFrame3D viewFrame = CoordFrame3D.identity();
+    	
+    	float Gscale = ava.getScale()*scale;
+    	Matrix4 mat = frame.getMatrix();
+    	System.out.println(mat.toString());
+    	System.out.println("X:"+mat.getValues()[12] + ", Y:"+mat.getValues()[13] + ", Z:"+mat.getValues()[14]);
+    	System.out.println("---------");
+    	
+    	Point3D Gposition = new Point3D(mat.getValues()[12], mat.getValues()[13], mat.getValues()[14]);
+    	
+    	viewFrame = viewFrame.scale(1/Gscale, 1/Gscale, 1/Gscale)
+    			.rotateX(MathUtil.normaliseAngle(-ava.getRotx()-RotationX))
+    			.rotateY(MathUtil.normaliseAngle(-ava.getRoty()-RotationY))
+    			.rotateZ(MathUtil.normaliseAngle(-ava.getRotz()-RotationZ))
+    			.translate(-Gposition.getX(),-Gposition.getY(),-Gposition.getZ());
+    	
+    	//CoordFrame3D Aspect = CoordFrame3D.identity().scale(1/myAspectRatio, 1,1);
+    	
+//    	CoordFrame3D viewFrame = frame
+//                .scale(1/scale, 1/scale, 1/scale)
+//                .rotateX(-RotationX)
+//                .rotateY(-RotationY)
+//    			.rotateZ(-RotationZ)
+//                .translate(-Position.getX(), -Position.getY(),-Position.getZ());
+    	
+    	//viewFrame = new CoordFrame3D(Aspect.getMatrix().multiply(viewFrame.getMatrix()));
     	
         Shader.setViewMatrix(gl, viewFrame.getMatrix());
 
@@ -97,66 +132,60 @@ public class Camera implements KeyListener{
         return myAspectRatio;
     }
     
-    @Override
-    public void keyPressed(KeyEvent e) {
+//    @Override
+////    public void keyPressed(KeyEvent e) {
     	
-    	double radians;
-    	
-    	
-        switch(e.getKeyCode()) {
-        case KeyEvent.VK_LEFT:
-        	
-        	RotationY = MathUtil.normaliseAngle(RotationY+3);
-        	//System.out.println(RotationY);
-        	break;
-        case KeyEvent.VK_RIGHT:
-        	
-        	
-        	RotationY = MathUtil.normaliseAngle(RotationY-3);
-        	//System.out.println(RotationY);
-        	break;
-        case KeyEvent.VK_DOWN:
-        	
-        	radians = Math.toRadians(RotationY);
-        	
-        	//System.out.println("UP - " + Position.getZ());
-        	Position = new Point3D(Position.getX()+(MovementSpeed*(float)(Math.sin(radians)))
-        			,Position.getY()
-        			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
-        	break;
-        case KeyEvent.VK_UP:
-            
-        	radians = Math.toRadians(RotationY);
-        	
-        	//System.out.println("UP - " + Position.getZ());
-        	Position = new Point3D(Position.getX()-(MovementSpeed*(float)(Math.sin(radians)))
-        			,Position.getY()
-        			,Position.getZ()-(MovementSpeed*(float)(Math.cos(radians))));
-            break;
-            
-        case KeyEvent.VK_SPACE:
-        
-        	Position = new Point3D(Position.getX(),Position.getY()-1,Position.getZ());
-        
-        	break;
-        	
-        case KeyEvent.VK_BACK_SPACE:
-            
-        	Position = new Point3D(Position.getX(),Position.getY()+1,Position.getZ());
-        
-        	break;
-        }
+//    	double radians;
+//    	
+//    	
+//        switch(e.getKeyCode()) {
+//        case KeyEvent.VK_LEFT:
+//        	
+//        	RotationY = MathUtil.normaliseAngle(RotationY+3);
+//        	//System.out.println(RotationY);
+//        	break;
+//        case KeyEvent.VK_RIGHT:
+//        	
+//        	
+//        	RotationY = MathUtil.normaliseAngle(RotationY-3);
+//        	//System.out.println(RotationY);
+//        	break;
+//        case KeyEvent.VK_DOWN:
+//        	
+//        	radians = Math.toRadians(RotationY);
+//        	
+//        	//System.out.println("UP - " + Position.getZ());
+//        	Position = new Point3D(Position.getX()+(MovementSpeed*(float)(Math.sin(radians)))
+//        			,Position.getY()
+//        			,Position.getZ()+(MovementSpeed*(float)(Math.cos(radians))));
+//        	break;
+//        case KeyEvent.VK_UP:
+//            
+//        	radians = Math.toRadians(RotationY);
+//        	
+//        	//System.out.println("UP - " + Position.getZ());
+//        	Position = new Point3D(Position.getX()-(MovementSpeed*(float)(Math.sin(radians)))
+//        			,Position.getY()
+//        			,Position.getZ()-(MovementSpeed*(float)(Math.cos(radians))));
+//            break;
+//            
+//        case KeyEvent.VK_SPACE:
+//        
+//        	Position = new Point3D(Position.getX(),Position.getY()-1,Position.getZ());
+//        
+//        	break;
+//        	
+//        case KeyEvent.VK_BACK_SPACE:
+//            
+//        	Position = new Point3D(Position.getX(),Position.getY()+1,Position.getZ());
+//        
+//        	break;
+//        }
 
-        
-        //System.out.println(RotationY);
-    	//System.out.println(Math.toRadians(RotationY));
-    	//System.out.println("SIN = " + (float)(-Math.sin(Math.toRadians(RotationY))));
-    	//System.out.println("COS = " + (float)(Math.cos(Math.toRadians(RotationY))));
-        
-    }
+//    }
 
-    @Override
-    public void keyReleased(KeyEvent e) {}
+//    @Override
+//    public void keyReleased(KeyEvent e) {}
     
 }
 
