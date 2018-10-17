@@ -18,7 +18,8 @@ import unsw.graphics.geometry.TriangleMesh;
 
 public class Pond {
 
-	private float scale;
+	private float scaleX;
+	private float scaleZ;
     private Point3D Position;
     
     private TriangleMesh base;
@@ -33,8 +34,9 @@ public class Pond {
 		Directory = new File(directory);
 		this.ImgType = ImgType;
 		
-		scale = 1;	
-		Position = new Point3D(0,0,0);
+		scaleX = 1;
+		scaleZ = 1;
+		Position = new Point3D(0,0.001f,0);
 		textures = new ArrayList<Texture>();
 	}
 	
@@ -45,17 +47,19 @@ public class Pond {
 		
 		textures = new ArrayList<Texture>();
 		
-		scale = 1;
-		Position = new Point3D(x,y,z);
+		scaleX = 1;
+		scaleZ = 1;
+		Position = new Point3D(x,y+0.001f,z);
 	}
 	
-	public Pond(String directory, String ImgType, float x ,float y, float z, float scale){
+	public Pond(String directory, String ImgType, float x ,float y, float z, float scaleX, float scaleZ){
 		
 		Directory = new File(directory);
 		this.ImgType = ImgType;
 		
-		this.scale = scale;
-		Position = new Point3D(x,y,z);
+		this.scaleX = scaleX;
+		this.scaleZ = scaleX;
+		Position = new Point3D(x,y+0.001f,z);
 		textures = new ArrayList<Texture>();
 	}
 	
@@ -104,7 +108,7 @@ public class Pond {
     	
     	Shader.setPenColor(gl, Color.WHITE);	
     	
-    	base.draw(gl, frame.translate(Position).scale(scale,scale, scale));
+    	base.draw(gl, frame.translate(Position).scale(scaleX, 1, scaleZ));
     	
     	frameNum++;
 		frameNum = frameNum % textures.size();

@@ -32,7 +32,7 @@ public class World extends Application3D {
         this.terrain = terrain;
         
         avatar = new Avatar();
-        pond = new Pond("res/textures/Pond", "jpg", -1, 0, -1);
+        pond = new Pond("res/textures/Pond", "jpg", 1.5f, 1, 3.5f);
     }
    
     /**
