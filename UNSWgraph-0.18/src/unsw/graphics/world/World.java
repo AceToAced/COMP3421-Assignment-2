@@ -25,12 +25,14 @@ public class World extends Application3D {
 
     private Terrain terrain;
     private Avatar avatar;
+    private Pond pond;
     
     public World(Terrain terrain) {
     	super("Assignment 2", 800, 600);
         this.terrain = terrain;
         
         avatar = new Avatar();
+        pond = new Pond("res/textures/Pond", "jpg", -1, 0, -1);
     }
    
     /**
@@ -58,6 +60,8 @@ public class World extends Application3D {
         
 		terrain.draw(gl, frame);
 		
+		pond.draw(gl, frame);
+		
 	}
 
 	@Override
@@ -72,6 +76,7 @@ public class World extends Application3D {
 		
 		avatar.Init(gl);
 		terrain.Init(gl);
+		pond.Init(gl);
 		
 		getWindow().addKeyListener(avatar);
 		

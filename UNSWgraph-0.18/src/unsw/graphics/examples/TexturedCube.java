@@ -58,7 +58,6 @@ public class TexturedCube extends Application3D {
     public void display(GL3 gl) {
         super.display(gl);
         
-        cam.setView(gl, CoordFrame3D.identity());
         Shader.setInt(gl, "tex", 0);
         
         gl.glActiveTexture(GL.GL_TEXTURE0);
