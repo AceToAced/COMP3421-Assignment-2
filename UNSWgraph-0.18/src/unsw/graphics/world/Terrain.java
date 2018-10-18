@@ -39,7 +39,8 @@ public class Terrain {
     private TriangleMesh treeMesh;
     private Texture texture;
     private Texture roadTexture;
-
+    private List<TriangleMesh> roadMeshes;
+    
     /**
      * Create a new terrain
      *
@@ -104,6 +105,11 @@ public class Terrain {
 			e.printStackTrace();
 		}
         
+    	roadMeshes = generateRoads(gl);
+    	for (TriangleMesh mesh : roadMeshes) {
+    		mesh.init(gl);
+        }
+    	
     }
     
     public void draw(GL3 gl, CoordFrame3D frame){
@@ -130,10 +136,8 @@ public class Terrain {
         gl.glBindTexture(GL.GL_TEXTURE_2D, roadTexture.getId());
 
     	// Draw roads
-        List<TriangleMesh> roadMeshes = generateRoads(gl);
         for (TriangleMesh mesh : roadMeshes) {
-        	mesh.init(gl);
-            mesh.draw(gl, frame);
+            mesh.draw(gl, frame.translate(new Point3D(0,0.001f,0)));
         }
     	
     }
