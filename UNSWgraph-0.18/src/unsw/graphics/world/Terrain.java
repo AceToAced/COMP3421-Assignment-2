@@ -105,8 +105,9 @@ public class Terrain {
 			e.printStackTrace();
 		}
         
-    	roadMeshes = generateRoads(gl);
-    	for (TriangleMesh mesh : roadMeshes) {
+    	this.roadMeshes = new ArrayList<TriangleMesh>();
+    	generateRoads(gl);
+    	for (TriangleMesh mesh : this.roadMeshes) {
     		mesh.init(gl);
         }
     	
@@ -128,7 +129,7 @@ public class Terrain {
     			
     			Point3D temp = trees.get(i).getPosition();
     			treeMesh.draw(gl, frame.translate(temp).translate(0.0f, 5.0259f, 0.6f));
-    			
+
     		}
     		
     	}
@@ -136,30 +137,34 @@ public class Terrain {
         gl.glBindTexture(GL.GL_TEXTURE_2D, roadTexture.getId());
 
     	// Draw roads
-        for (TriangleMesh mesh : roadMeshes) {
-            mesh.draw(gl, frame.translate(new Point3D(0,0.001f,0)));
+        if (roadMeshes != null) {
+        	for (TriangleMesh mesh : roadMeshes) {
+                mesh.draw(gl, frame.translate(new Point3D(0,0.001f,0)));
+            }
         }
+        
     	
     }
 
-    private List<TriangleMesh> generateRoads(GL3 gl) {
-        List<TriangleMesh> meshes = new ArrayList<TriangleMesh>();
+    private void generateRoads(GL3 gl) {
         for (Road road : roads) {
-            List<Point3D> roadCurve = new ArrayList<>();
+            List<Point3D> vertices = new ArrayList<>();
             Point2D startPoint = road.point(0);
             float altitude = altitude(startPoint.getX(), startPoint.getY());
-            float dt = 1.0f/road.size();
-            for(int inc = 0; inc <= road.size(); inc++){
+            int roadSize = road.size();
+            float dt = 1.0f/10.f;
+            for(int inc = 0; inc < 10; inc++){
                 float t = inc*dt;
                 // The origin
                 Point2D origin2D = road.point(t);
                 Point3D origin = new Point3D(origin2D.getX(), altitude, origin2D.getY());
                 // Compute the frenet frame
-                Point2D k2D = road.pointDerivative(t);
-                float k1 = k2D.getX();
-                float k2 = k2D.getY();
-                Vector3 k = new Vector3(k1, altitude, k2);
-                Vector3 i = new Vector3(k2, altitude, -k1);
+                Point2D tangent = road.pointDerivative(t);
+                System.out.println("tangent at t= " + Float.toString(t) + " is " + tangent.toString());
+                float k1 = tangent.getX();
+                float k2 = tangent.getY();
+                Vector3 k = new Vector3(k1, 0, k2).normalize();
+                Vector3 i = new Vector3(k2, 0, -k1).normalize();
                 Vector3 j = k.cross(i);
                 float[] values = new float[] {
                         i.getX(), i.getY(), i.getZ(), 0, // i
@@ -168,15 +173,16 @@ public class Terrain {
                         origin.getX(), origin.getY(), origin.getZ(), 1  // phi
                 };
                 Matrix4 frenetFrame = new Matrix4(values);
-                Point3D wRight = new Point3D(width/2, 0, 0);
-                Point3D wLeft = new Point3D(-width/2, 0, 0);
-                Point3D p1 = frenetFrame.multiply(wRight.asHomogenous()).asPoint3D();
-                Point3D p2 = frenetFrame.multiply(wLeft.asHomogenous()).asPoint3D();
-                roadCurve.add(p1);
-                roadCurve.add(p2);
+                float roadWidth = (float) road.width()/2f;
+                Vector4 l1 = new Vector4(roadWidth, 0, 0, 1);
+                Vector4 l2 =  new Vector4(-roadWidth, 0, 0, 1);;
+                Point3D ml1 = frenetFrame.multiply(l1).asPoint3D();
+                Point3D ml2 = frenetFrame.multiply(l2).asPoint3D();
+                vertices.add(ml1);
+                vertices.add(ml2);
             }
             List<Integer> indices = new ArrayList<>();
-            for (int i = 0; i <= roadCurve.size() - 4; i += 4) {
+            for (int i = 0; i <= vertices.size() - 4; i += 4) {
                 // First triangle of quad
                 indices.add(i);
                 indices.add(i+1);
@@ -186,10 +192,9 @@ public class Terrain {
                 indices.add(i+2);
                 indices.add(i+3);
             }
-            TriangleMesh mesh = new TriangleMesh(roadCurve, indices, true);
-            meshes.add(mesh);
+            TriangleMesh mesh = new TriangleMesh(vertices, indices, true);
+            this.roadMeshes.add(mesh);
         }
-        return meshes;
     }
 
 

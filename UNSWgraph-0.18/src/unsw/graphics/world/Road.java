@@ -2,6 +2,7 @@ package unsw.graphics.world;
 
 import java.util.List;
 
+import unsw.graphics.Vector3;
 import unsw.graphics.geometry.Point2D;
 
 /**
@@ -40,7 +41,7 @@ public class Road {
      * @return
      */
     public int size() {
-        return points.size() / 6;
+        return points.size() / 3;
     }
 
     /**
@@ -109,43 +110,42 @@ public class Road {
     private float derivativeCoeff(int i, float t) {
         switch(i) {
             case 0:
-                return -3 * (1-t) * (1-t);
+                return (1-t) * (1-t);
 
             case 1:
-                return (3 * (1-t) * (1-t)) - (6 * t * (1 - t));
-
+                return 2*t*(1-t);
             case 2:
-                return (-3 * t * t) + (6 * t * (1-t));
-
-            case 3:
-                return (3 * t * t);
+                return t*t;
         }
         // this should never happen
         throw new IllegalArgumentException("" + i);
     }
 
     public Point2D pointDerivative(float t) {
-        int i = (int)Math.floor(t);
-        t = t - i;
+//        int i = (int)Math.floor(t);
+//        t = t - i;
 
-        i *= 3;
+//        i *= 3;
+        
+        
+//        Point2D p0 = points.get(i++);
+//        Point2D p1 = points.get(i++);
+//        Point2D p2 = points.get(i++);
+//        Point2D p3 = points.get(i++);
 
-        Point2D p0 = points.get(i++);
-        Point2D p1 = points.get(i++);
-        Point2D p2 = points.get(i++);
-        Point2D p3 = points.get(i++);
+        Vector3 p0 = points.get(0).asHomogenous();
+        Vector3 p1 = points.get(1).asHomogenous();
+        Vector3 p2 = points.get(2).asHomogenous();
+        Vector3 p3 = points.get(3).asHomogenous();
 
+        Vector3 p01 = p1.plus(p0.negate());
+        p01 = p01.scale(derivativeCoeff(0, t));
+        Vector3 p12 = p2.plus(p1.negate());
+        p12 = p12.scale(derivativeCoeff(1, t));
+        Vector3 p23 = p3.plus(p2.negate());
+        p23 = p23.scale(derivativeCoeff(2, t));
 
-        float x = derivativeCoeff(0, t) * p0.getX()
-            + derivativeCoeff(1, t) * p1.getX()
-            + derivativeCoeff(2, t) * p2.getX()
-            + derivativeCoeff(3, t) * p3.getX();
-        float y = derivativeCoeff(0, t) * p0.getY()
-                + derivativeCoeff(1, t) * p1.getY()
-                + derivativeCoeff(2, t) * p2.getY()
-                + derivativeCoeff(3, t) * p3.getY();
-
-        return new Point2D(x, y);
+        return (p01.plus(p12).plus(p23)).scale(3).asPoint2D();
     }
 
 
