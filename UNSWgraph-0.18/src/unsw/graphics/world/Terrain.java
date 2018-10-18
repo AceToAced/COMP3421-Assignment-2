@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,12 +14,7 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.GLBuffers;
 
-import unsw.graphics.CoordFrame2D;
-import unsw.graphics.CoordFrame3D;
-import unsw.graphics.Point3DBuffer;
-import unsw.graphics.Shader;
-import unsw.graphics.Texture;
-import unsw.graphics.Vector3;
+import unsw.graphics.*;
 import unsw.graphics.geometry.Point2D;
 import unsw.graphics.geometry.Point3D;
 import unsw.graphics.geometry.TriangleMesh;
@@ -42,6 +38,7 @@ public class Terrain {
     private TriangleMesh ground;
     private TriangleMesh treeMesh;
     private Texture texture;
+    private Texture roadTexture;
 
     /**
      * Create a new terrain
@@ -98,7 +95,7 @@ public class Terrain {
     	ground = new TriangleMesh(vertexList, indicesList,true, texList);
     	ground.init(gl);
     	texture = new Texture(gl, "res/textures/grass.bmp", "bmp", false);
-    	
+    	roadTexture = new Texture(gl, "res/textures/rock.bmp", "bmp", false);
     	try {
 			treeMesh = new TriangleMesh("res/models/tree.ply",true,true);
 			treeMesh.init(gl);
@@ -118,9 +115,7 @@ public class Terrain {
     	
     	Shader.setPenColor(gl, Color.WHITE);
     	ground.draw(gl,frame);
-    	
-    	
-    	
+
     	if(treeMesh != null){
     		
     		for(int i = 0; i < trees.size(); i++){
@@ -131,9 +126,67 @@ public class Terrain {
     		}
     		
     	}
+
+        gl.glBindTexture(GL.GL_TEXTURE_2D, roadTexture.getId());
+
+    	// Draw roads
+        List<TriangleMesh> roadMeshes = generateRoads(gl);
+        for (TriangleMesh mesh : roadMeshes) {
+        	mesh.init(gl);
+            mesh.draw(gl, frame);
+        }
     	
     }
-    
+
+    private List<TriangleMesh> generateRoads(GL3 gl) {
+        List<TriangleMesh> meshes = new ArrayList<TriangleMesh>();
+        for (Road road : roads) {
+            List<Point3D> roadCurve = new ArrayList<>();
+            float dt = 1.0f/road.size();
+            for(int inc = 0; inc <= road.size(); inc++){
+                float t = inc*dt;
+                // The origin
+                Point2D origin2D = road.point(t);
+                Point3D origin = new Point3D(origin2D.getX(), 0, origin2D.getY());
+                // Compute the frenet frame
+                Point2D k2D = road.pointDerivative(t);
+                float k1 = k2D.getX();
+                float k2 = k2D.getY();
+                Vector3 k = new Vector3(k1, 0, k2);
+                Vector3 i = new Vector3(k2, 0, -k1);
+                Vector3 j = k.cross(i);
+                float[] values = new float[] {
+                        i.getX(), i.getY(), i.getZ(), 0, // i
+                        j.getX(), j.getY(), j.getZ(), 0, // j
+                        k.getX(), k.getY(), k.getZ(), 0, // k
+                        origin.getX(), origin.getY(), origin.getZ(), 1  // phi
+                };
+                Matrix4 frenetFrame = new Matrix4(values);
+                Point3D wRight = new Point3D(width/2, 0, 0);
+                Point3D wLeft = new Point3D(-width/2, 0, 0);
+                Point3D p1 = frenetFrame.multiply(wRight.asHomogenous()).asPoint3D();
+                Point3D p2 = frenetFrame.multiply(wLeft.asHomogenous()).asPoint3D();
+                roadCurve.add(p1);
+                roadCurve.add(p2);
+            }
+            List<Integer> indices = new ArrayList<>();
+            for (int i = 0; i <= roadCurve.size() - 4; i += 4) {
+                // First triangle of quad
+                indices.add(i);
+                indices.add(i+1);
+                indices.add(i+2);
+                // Second triangle of quad
+                indices.add(i+1);
+                indices.add(i+2);
+                indices.add(i+3);
+            }
+            TriangleMesh mesh = new TriangleMesh(roadCurve, indices, true);
+            meshes.add(mesh);
+        }
+        return meshes;
+    }
+
+
     public List<Tree> trees() {
         return trees;
     }

@@ -106,5 +106,47 @@ public class Road {
         throw new IllegalArgumentException("" + i);
     }
 
+    private float derivativeCoeff(int i, float t) {
+        switch(i) {
+            case 0:
+                return -3 * (1-t) * (1-t);
+
+            case 1:
+                return (3 * (1-t) * (1-t)) - (6 * t * (1 - t));
+
+            case 2:
+                return (-3 * t * t) + (6 * t * (1-t));
+
+            case 3:
+                return (3 * t * t);
+        }
+        // this should never happen
+        throw new IllegalArgumentException("" + i);
+    }
+
+    public Point2D pointDerivative(float t) {
+        int i = (int)Math.floor(t);
+        t = t - i;
+
+        i *= 3;
+
+        Point2D p0 = points.get(i++);
+        Point2D p1 = points.get(i++);
+        Point2D p2 = points.get(i++);
+        Point2D p3 = points.get(i++);
+
+
+        float x = derivativeCoeff(0, t) * p0.getX()
+            + derivativeCoeff(1, t) * p1.getX()
+            + derivativeCoeff(2, t) * p2.getX()
+            + derivativeCoeff(3, t) * p3.getX();
+        float y = derivativeCoeff(0, t) * p0.getY()
+                + derivativeCoeff(1, t) * p1.getY()
+                + derivativeCoeff(2, t) * p2.getY()
+                + derivativeCoeff(3, t) * p3.getY();
+
+        return new Point2D(x, y);
+    }
+
 
 }
