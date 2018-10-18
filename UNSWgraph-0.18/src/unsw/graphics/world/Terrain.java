@@ -142,18 +142,20 @@ public class Terrain {
         List<TriangleMesh> meshes = new ArrayList<TriangleMesh>();
         for (Road road : roads) {
             List<Point3D> roadCurve = new ArrayList<>();
+            Point2D startPoint = road.point(0);
+            float altitude = altitude(startPoint.getX(), startPoint.getY());
             float dt = 1.0f/road.size();
             for(int inc = 0; inc <= road.size(); inc++){
                 float t = inc*dt;
                 // The origin
                 Point2D origin2D = road.point(t);
-                Point3D origin = new Point3D(origin2D.getX(), 0, origin2D.getY());
+                Point3D origin = new Point3D(origin2D.getX(), altitude, origin2D.getY());
                 // Compute the frenet frame
                 Point2D k2D = road.pointDerivative(t);
                 float k1 = k2D.getX();
                 float k2 = k2D.getY();
-                Vector3 k = new Vector3(k1, 0, k2);
-                Vector3 i = new Vector3(k2, 0, -k1);
+                Vector3 k = new Vector3(k1, altitude, k2);
+                Vector3 i = new Vector3(k2, altitude, -k1);
                 Vector3 j = k.cross(i);
                 float[] values = new float[] {
                         i.getX(), i.getY(), i.getZ(), 0, // i
