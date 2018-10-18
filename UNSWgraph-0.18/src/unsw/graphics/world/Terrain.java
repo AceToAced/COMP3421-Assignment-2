@@ -147,7 +147,8 @@ public class Terrain {
     }
 
     private void generateRoads(GL3 gl) {
-        for (Road road : roads) {
+
+    	for (Road road : roads) {
             List<Point3D> vertices = new ArrayList<>();
             Point2D startPoint = road.point(0);
             float altitude = altitude(startPoint.getX(), startPoint.getY());
@@ -189,8 +190,20 @@ public class Terrain {
                 indices.add(i+2);
                 // Second triangle of quad
                 indices.add(i+1);
-                indices.add(i+2);
                 indices.add(i+3);
+                indices.add(i+2);
+                if (i != vertices.size() -4) {
+                    // Third triangle
+                    indices.add(i+2);
+                    indices.add(i+3);
+                    indices.add(i+4);
+                }
+                
+            	// Fourth triangle
+//                indices.add(i+3);
+//                indices.add(i+5);
+//                indices.add(i+4);
+                
             }
             TriangleMesh mesh = new TriangleMesh(vertices, indices, true);
             this.roadMeshes.add(mesh);
