@@ -122,22 +122,16 @@ public class Road {
     }
 
     public Point2D pointDerivative(float t) {
-//        int i = (int)Math.floor(t);
-//        t = t - i;
+        int i = (int)Math.floor(t);
+        t = t - i;
 
-//        i *= 3;
+        i *= 3;
         
+        Vector3 p0 = points.get(i++).asHomogenous();
+        Vector3 p1 = points.get(i++).asHomogenous();
+        Vector3 p2 = points.get(i++).asHomogenous();
+        Vector3 p3 = points.get(i++).asHomogenous();
         
-//        Point2D p0 = points.get(i++);
-//        Point2D p1 = points.get(i++);
-//        Point2D p2 = points.get(i++);
-//        Point2D p3 = points.get(i++);
-
-        Vector3 p0 = points.get(0).asHomogenous();
-        Vector3 p1 = points.get(1).asHomogenous();
-        Vector3 p2 = points.get(2).asHomogenous();
-        Vector3 p3 = points.get(3).asHomogenous();
-
         Vector3 p01 = p1.plus(p0.negate());
         p01 = p01.scale(derivativeCoeff(0, t));
         Vector3 p12 = p2.plus(p1.negate());
@@ -145,7 +139,8 @@ public class Road {
         Vector3 p23 = p3.plus(p2.negate());
         p23 = p23.scale(derivativeCoeff(2, t));
 
-        return (p01.plus(p12).plus(p23)).scale(3).asPoint2D();
+
+        return (p01.plus(p12).plus(p23).scale(3).asPoint2D());
     }
 
 

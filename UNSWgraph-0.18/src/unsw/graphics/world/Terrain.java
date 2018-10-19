@@ -163,8 +163,14 @@ public class Terrain {
             Point2D startPoint = road.point(0);
             float altitude = altitude(startPoint.getX(), startPoint.getY());
             int roadSize = road.size();
-            float dt = 1.0f/10.f;
-            for(int inc = 0; inc < 10; inc++){
+            float dt = (1.0f/roadSize)/10;
+            int end = 0;
+            if (roadSize == 1) {
+            	end = 10;
+            } else if (roadSize == 2) {
+            	end = 40;
+            }
+            for(int inc = 0; inc < end; inc++){
                 float t = inc*dt;
                 // The origin
                 Point2D origin2D = road.point(t);
