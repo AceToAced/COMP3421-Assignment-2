@@ -34,6 +34,7 @@ public class Terrain {
     private List<Tree> trees;
     private List<Road> roads;
     private Vector3 sunlight;
+    private List<Pond> ponds;
     
     private TriangleMesh ground;
     private TriangleMesh treeMesh;
@@ -53,6 +54,7 @@ public class Terrain {
         altitudes = new float[width][depth];
         trees = new ArrayList<Tree>();
         roads = new ArrayList<Road>();
+        ponds = new ArrayList<Pond>();
         this.sunlight = sunlight;
     }
 
@@ -107,9 +109,14 @@ public class Terrain {
         
     	this.roadMeshes = new ArrayList<TriangleMesh>();
     	generateRoads(gl);
+    	
     	for (TriangleMesh mesh : this.roadMeshes) {
     		mesh.init(gl);
         }
+    	
+    	for(Pond pond: ponds){
+    		pond.Init(gl);
+    	}
     	
     }
     
@@ -143,6 +150,9 @@ public class Terrain {
             }
         }
         
+    	for(Pond pond: ponds){
+    		pond.draw(gl, frame);
+    	}
     	
     }
 
@@ -372,7 +382,12 @@ public class Terrain {
         trees.add(tree);
     }
 
-
+    public void addPond(String Directory, String ImgType, float x, float y, float z, float scaleX, float scaleY){
+    	
+    	ponds.add(new Pond(Directory, ImgType, x, y, z, scaleX, scaleY));
+    	
+    }
+    
     /**
      * Add a road. 
      * 

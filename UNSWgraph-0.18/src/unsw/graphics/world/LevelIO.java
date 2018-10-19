@@ -64,6 +64,36 @@ public class LevelIO {
             }
         }
         
+        if (jsonTerrain.has("ponds")) {
+            JSONArray jsonPonds = jsonTerrain.getJSONArray("ponds");
+            for (int i = 0; i < jsonPonds.length(); i++) {
+                JSONObject jsonPond = jsonPonds.getJSONObject(i);
+                
+                String Dir = (String) jsonPond.getString("directory");
+                String imgType = (String) jsonPond.getString("imgType");
+                
+                float x = (float) jsonPond.getDouble("x");
+                float y = (float) jsonPond.getDouble("y");
+                float z = (float) jsonPond.getDouble("z");
+                
+                float scaleX;
+                float scaleZ;
+                
+                if(jsonPond.has("scaleX")){
+                	scaleX = (float) jsonPond.getDouble("scaleX");
+                }else{
+                	scaleX = 1;
+                }
+                
+                if(jsonPond.has("scaleZ")){
+                	scaleZ = (float) jsonPond.getDouble("scaleZ");
+                }else{
+                	scaleZ = 1;
+                }
+                terrain.addPond(Dir, imgType, x, y, z, scaleX, scaleZ);
+            }
+        }
+        
         if (jsonTerrain.has("roads")) {
             JSONArray jsonRoads = jsonTerrain.getJSONArray("roads");
             for (int i = 0; i < jsonRoads.length(); i++) {

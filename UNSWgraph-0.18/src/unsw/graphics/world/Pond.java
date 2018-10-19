@@ -94,7 +94,7 @@ public class Pond {
     	
     	for(int i = 0; i < temp.size(); i++){
 
-    		textures.add(new Texture(gl, "res/textures/Pond/" + temp.get(i) , ImgType, false));
+    		textures.add(new Texture(gl, Directory + "\\" + temp.get(i) , ImgType, false));
     	}
     	
 	}
