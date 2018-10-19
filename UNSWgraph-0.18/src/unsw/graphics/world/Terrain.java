@@ -199,30 +199,43 @@ public class Terrain {
                 vertices.add(ml2);
             }
             List<Integer> indices = new ArrayList<>();
+            List<Point2D> textureList = new ArrayList<>();
             for (int i = 0; i <= vertices.size() - 4; i += 4) {
                 // First triangle of quad
                 indices.add(i);
                 indices.add(i+1);
                 indices.add(i+2);
+                textureList.add(new Point2D(0,0));
+                textureList.add(new Point2D(1,0));
+                textureList.add(new Point2D(1,1));
                 // Second triangle of quad
                 indices.add(i+1);
                 indices.add(i+3);
                 indices.add(i+2);
+                textureList.add(new Point2D(0,0));
+                textureList.add(new Point2D(1,0));
+                textureList.add(new Point2D(1,1));
                 
                 if (i != vertices.size() -4) {
                     // Third triangle
                     indices.add(i+2);
                     indices.add(i+3);
                     indices.add(i+4);
+                    textureList.add(new Point2D(0,0));
+                    textureList.add(new Point2D(1,0));
+                    textureList.add(new Point2D(1,1));
                 }
                 if (i <= vertices.size() -5) {
                  // Fourth triangle
                   indices.add(i+3);
                   indices.add(i+5);
                   indices.add(i+4);
+                    textureList.add(new Point2D(0,0));
+                    textureList.add(new Point2D(1,0));
+                    textureList.add(new Point2D(1,1));
                 }
             }
-            TriangleMesh mesh = new TriangleMesh(vertices, indices, true);
+            TriangleMesh mesh = new TriangleMesh(vertices, indices, true, textureList);
             this.roadMeshes.add(mesh);
         }
     }
