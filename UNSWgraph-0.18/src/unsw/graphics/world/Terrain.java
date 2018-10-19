@@ -192,18 +192,19 @@ public class Terrain {
                 indices.add(i+1);
                 indices.add(i+3);
                 indices.add(i+2);
+                
                 if (i != vertices.size() -4) {
                     // Third triangle
                     indices.add(i+2);
                     indices.add(i+3);
                     indices.add(i+4);
                 }
-                
-            	// Fourth triangle
-//                indices.add(i+3);
-//                indices.add(i+5);
-//                indices.add(i+4);
-                
+                if (i <= vertices.size() -5) {
+                 // Fourth triangle
+                  indices.add(i+3);
+                  indices.add(i+5);
+                  indices.add(i+4);
+                }
             }
             TriangleMesh mesh = new TriangleMesh(vertices, indices, true);
             this.roadMeshes.add(mesh);
