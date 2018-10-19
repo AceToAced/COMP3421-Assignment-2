@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
 import com.jogamp.opengl.GL3;
 
 import unsw.graphics.Application3D;
@@ -25,12 +27,17 @@ public class World extends Application3D {
 
     private Terrain terrain;
     private Avatar avatar;
+    private boolean torch;
+    private boolean torchPrev;
+    private Shader shader;
     
     public World(Terrain terrain) {
     	super("Assignment 2", 800, 600);
         this.terrain = terrain;
         
         avatar = new Avatar();
+        torch = false;
+        torchPrev = true;
         //pond = new Pond("res/textures/Pond", "jpg", 1.5f, 1, 3.5f);
     }
    
@@ -50,7 +57,15 @@ public class World extends Application3D {
 	public void display(GL3 gl) {
 		super.display(gl);
 		
+		
 		avatar.setHeight(terrain.altitude(avatar.getPosition().getX(), avatar.getPosition().getZ()));//+0.5f);
+		
+		if(torch){
+			
+			Point3D temp = avatar.getPosition();
+			
+			Shader.setPoint3D(gl, "lightPos", new Point3D(temp.getX(), temp.getY()+0.3f, temp.getZ()));
+		}
 		
 		CoordFrame3D frame = CoordFrame3D.identity();
 		
@@ -58,6 +73,45 @@ public class World extends Application3D {
 		avatar.draw(gl, frame);
         
 		terrain.draw(gl, frame);
+		
+		if(torch == torchPrev){
+			
+			torchPrev = !torch;
+			
+			if(torch){
+				
+				shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
+		                "shaders/fragment_tex_phong_torch.glsl");
+		        shader.use(gl);
+
+		        Shader.setPoint3D(gl, "lightPos", avatar.getPosition());
+		        Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
+		        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
+		        
+		        Shader.setColor(gl, "ambientCoeff", new Color(0.6f, 0.6f, 0.6f));
+		        Shader.setColor(gl, "diffuseCoeff", new Color(0.6f, 0.6f, 0.6f));
+		        Shader.setColor(gl, "specularCoeff", new Color(0.1f, 0.1f, 0.1f));
+		        Shader.setFloat(gl, "phongExp", 32f);
+				
+			}else{
+				
+				shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
+		                "shaders/fragment_tex_phong_directional.glsl");
+		        shader.use(gl);
+
+		        Shader.setPoint3D(gl, "lightDirection", terrain.getSunlight().asPoint3D());
+		        Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
+		        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
+		        
+		        Shader.setColor(gl, "ambientCoeff", new Color(0.6f, 0.6f, 0.6f));
+		        Shader.setColor(gl, "diffuseCoeff", new Color(0.6f, 0.6f, 0.6f));
+		        Shader.setColor(gl, "specularCoeff", new Color(0.1f, 0.1f, 0.1f));
+		        Shader.setFloat(gl, "phongExp", 32f);
+				
+			}
+			
+		}
+		
 		
 	}
 
@@ -75,13 +129,28 @@ public class World extends Application3D {
 		terrain.Init(gl);
 		
 		getWindow().addKeyListener(avatar);
+		getWindow().addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyReleased(KeyEvent arg0) {}
+			
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+
+				if(arg0.getKeyCode() == KeyEvent.VK_SPACE){
+					torch = !torch;
+				}
+				
+			}
+		});
 		
-		Shader shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
+		shader = new Shader(gl, "shaders/vertex_tex_phong.glsl",
                 "shaders/fragment_tex_phong_directional.glsl");
         shader.use(gl);
 
         // Set the lighting properties
         Shader.setPoint3D(gl, "lightDirection", terrain.getSunlight().asPoint3D());
+        //Shader.setPoint3D(gl, "lightPos", avatar.getPosition());
         Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
         Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
         

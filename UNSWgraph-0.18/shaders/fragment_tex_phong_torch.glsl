@@ -6,8 +6,8 @@ uniform vec4 input_color;
 uniform mat4 view_matrix;
 
 // Light properties
-//uniform vec3 lightPos;
-uniform vec3 lightDirection;
+//uniform vec3 lightDirection;
+uniform vec3 lightPos;
 uniform vec3 lightIntensity;
 uniform vec3 ambientIntensity;
 
@@ -28,7 +28,7 @@ void main()
 {
 	vec3 normal = m;
     // Compute the light direction and view direction vectors
-    vec3 lightDir = (normalize(view_matrix * vec4(lightDirection, 0))).xyz;
+    vec3 lightDir = normalize(view_matrix * vec4(lightPos, 1) - viewPosition).xyz;
     vec3 viewDir = normalize(-viewPosition.xyz);
     
     vec3 ambient = ambientIntensity*ambientCoeff;
@@ -39,7 +39,7 @@ void main()
     vec3 reflectDir = normalize(reflect(-lightDir,m));
     // Only show specular reflections for the front face
     vec3 specular;
-    if (dot(normal,lightDirection) > 0) 
+    if (dot(normal,lightDir) > 0) 
     	specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
     else
 		specular = vec3(0);
