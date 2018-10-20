@@ -65,8 +65,6 @@ public class World extends Application3D {
 			Point3D temp = avatar.getPosition();
 			Shader.setPoint3D(gl, "lightPos", new Point3D(temp.getX(), temp.getY()+0.3f, temp.getZ()));
 			
-			temp = avatar.getDirection();
-			Shader.setPoint3D(gl, "lightDirection", temp);
 		}
 		
 		CoordFrame3D frame = CoordFrame3D.identity();
@@ -87,7 +85,7 @@ public class World extends Application3D {
 		        shader.use(gl);
 
 		        Shader.setPoint3D(gl, "lightPos", avatar.getPosition());
-		        Shader.setPoint3D(gl, "torchDirection", avatar.getDirection());
+		        Shader.setPoint3D(gl, "torchDirection", new Point3D(0,0,1));
 		        
 		        Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
 		        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));

@@ -35,21 +35,23 @@ void main()
     
     vec3 ambient = ambientIntensity*ambientCoeff;
     vec3 diffuse;
-    
-    if(theta > 0.96)
-    	diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
-    else
-    	diffuse = vec3(0);
-    	
-    // Specular shading
-    // Compute the reflection vector 
     vec3 reflectDir = normalize(reflect(-lightDir,m));
-    // Only show specular reflections for the front face
     vec3 specular;
-    if (dot(normal,lightDir) > 0) 
-    	specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
-    else
-		specular = vec3(0);
+    
+    if(theta > 0.9){
+    	
+    	diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
+    	
+    	if (dot(normal,lightDir) > 0) 
+    		specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
+    	else
+			specular = vec3(0);
+    	
+    }else{
+    	diffuse = vec3(0);
+    	specular = vec3(0);
+	}
+
 
     vec4 ambientAndDiffuse = vec4(ambient + diffuse, 1);
 
