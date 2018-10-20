@@ -170,14 +170,9 @@ public class Terrain {
             Point2D startPoint = road.point(0);
             float altitude = altitude(startPoint.getX(), startPoint.getY());
             int roadSize = road.size();
-            float dt = (1.0f/roadSize)/10;
-            int end = 0;
-            if (roadSize == 1) {
-            	end = 10;
-            } else if (roadSize == 2) {
-            	end = 40;
-            }
-            for(int inc = 0; inc < end; inc++){
+            float segments = 20f;
+            float dt = roadSize / segments;
+            for(int inc = 0; inc < segments; inc++){
                 float t = inc*dt;
                 // The origin
                 Point2D origin2D = road.point(t);
@@ -223,7 +218,7 @@ public class Terrain {
                 textureList.add(new Point2D(1,0));
                 textureList.add(new Point2D(1,1));
                 
-                if (i != vertices.size() -4) {
+                if (i < vertices.size() -4) {
                     // Third triangle
                     indices.add(i+2);
                     indices.add(i+3);
