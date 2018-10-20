@@ -40,7 +40,7 @@ public class World extends Application3D {
         torchPrev = true;
         //pond = new Pond("res/textures/Pond", "jpg", 1.5f, 1, 3.5f);
     }
-   
+    
     /**
      * Load a level file and display it.
      * 
@@ -63,8 +63,10 @@ public class World extends Application3D {
 		if(torch){
 			
 			Point3D temp = avatar.getPosition();
-			
 			Shader.setPoint3D(gl, "lightPos", new Point3D(temp.getX(), temp.getY()+0.3f, temp.getZ()));
+			
+			temp = avatar.getDirection();
+			Shader.setPoint3D(gl, "lightDirection", temp);
 		}
 		
 		CoordFrame3D frame = CoordFrame3D.identity();
@@ -85,6 +87,8 @@ public class World extends Application3D {
 		        shader.use(gl);
 
 		        Shader.setPoint3D(gl, "lightPos", avatar.getPosition());
+		        Shader.setPoint3D(gl, "torchDirection", avatar.getDirection());
+		        
 		        Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
 		        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
 		        
@@ -124,6 +128,8 @@ public class World extends Application3D {
 	@Override
 	public void init(GL3 gl) {
 		super.init(gl);
+		
+		System.out.println((float)Math.cos(15f*(Math.PI/180)));
 		
 		avatar.Init(gl);
 		terrain.Init(gl);

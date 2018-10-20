@@ -182,4 +182,13 @@ public class Avatar implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {}
 	
+    public Point3D getDirection(){
+    	
+    	double radians = Math.toRadians(MathUtil.normaliseAngle(RotationY - 90));
+    	
+    	return new Point3D(((float)(Math.sin(radians)))
+    			,0
+    			,((float)(Math.cos(radians))));
+    }
+    
 }
