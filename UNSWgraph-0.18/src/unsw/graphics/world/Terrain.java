@@ -230,9 +230,9 @@ public class Terrain {
                   indices.add(i+3);
                   indices.add(i+5);
                   indices.add(i+4);
-                    textureList.add(new Point2D(0,0));
-                    textureList.add(new Point2D(1,0));
-                    textureList.add(new Point2D(1,1));
+	              textureList.add(new Point2D(0,0));
+	              textureList.add(new Point2D(1,0));
+	              textureList.add(new Point2D(1,1));
                 }
             }
             TriangleMesh mesh = new TriangleMesh(vertices, indices, true, textureList);
