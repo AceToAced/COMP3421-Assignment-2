@@ -36,7 +36,7 @@ public class Pond {
 		
 		scaleX = 1;
 		scaleZ = 1;
-		Position = new Point3D(0,0.001f,0);
+		Position = new Point3D(0,0,0);
 		textures = new ArrayList<Texture>();
 	}
 	
@@ -49,7 +49,7 @@ public class Pond {
 		
 		scaleX = 1;
 		scaleZ = 1;
-		Position = new Point3D(x,y+0.001f,z);
+		Position = new Point3D(x,y,z);
 	}
 	
 	public Pond(String directory, String ImgType, float x ,float y, float z, float scaleX, float scaleZ){
@@ -59,7 +59,7 @@ public class Pond {
 		
 		this.scaleX = scaleX;
 		this.scaleZ = scaleX;
-		Position = new Point3D(x,y+0.001f,z);
+		Position = new Point3D(x,y,z);
 		textures = new ArrayList<Texture>();
 	}
 	

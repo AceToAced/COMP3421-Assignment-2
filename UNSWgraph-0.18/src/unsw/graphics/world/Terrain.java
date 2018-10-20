@@ -143,16 +143,23 @@ public class Terrain {
 
         gl.glBindTexture(GL.GL_TEXTURE_2D, roadTexture.getId());
 
-    	// Draw roads
+        //fix z-fighting
+        gl.glEnable(GL3.GL_POLYGON_OFFSET_FILL);
+        gl.glPolygonOffset(-1.0f, -1.0f); 
+    	
+        // Draw roads
         if (roadMeshes != null) {
         	for (TriangleMesh mesh : roadMeshes) {
-                mesh.draw(gl, frame.translate(new Point3D(0,0.001f,0)));
+                mesh.draw(gl, frame);
             }
         }
+        
         
     	for(Pond pond: ponds){
     		pond.draw(gl, frame);
     	}
+    	
+    	gl.glDisable(GL3.GL_POLYGON_OFFSET_FILL);
     	
     }
 
