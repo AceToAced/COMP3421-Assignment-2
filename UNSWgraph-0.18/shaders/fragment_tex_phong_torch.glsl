@@ -8,6 +8,7 @@ uniform mat4 view_matrix;
 // Light properties
 //uniform vec3 lightDirection;
 uniform vec3 lightPos;
+uniform vec3 torchDirection;
 uniform vec3 lightIntensity;
 uniform vec3 ambientIntensity;
 
@@ -30,19 +31,27 @@ void main()
     // Compute the light direction and view direction vectors
     vec3 lightDir = normalize(view_matrix * vec4(lightPos, 1) - viewPosition).xyz;
     vec3 viewDir = normalize(-viewPosition.xyz);
+    float theta = dot(lightDir,normalize(torchDirection));
     
     vec3 ambient = ambientIntensity*ambientCoeff;
-    vec3 diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
-    
-    // Specular shading
-    // Compute the reflection vector 
+    vec3 diffuse;
     vec3 reflectDir = normalize(reflect(-lightDir,m));
-    // Only show specular reflections for the front face
     vec3 specular;
-    if (dot(normal,lightDir) > 0) 
-    	specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
-    else
-		specular = vec3(0);
+    
+    if(theta > 0.9){
+    	
+    	diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
+    	
+    	if (dot(normal,lightDir) > 0) 
+    		specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
+    	else
+			specular = vec3(0);
+    	
+    }else{
+    	diffuse = vec3(0);
+    	specular = vec3(0);
+	}
+
 
     vec4 ambientAndDiffuse = vec4(ambient + diffuse, 1);
 
