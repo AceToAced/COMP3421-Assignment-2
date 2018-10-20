@@ -11,6 +11,8 @@ uniform vec3 lightPos;
 uniform vec3 torchDirection;
 uniform vec3 lightIntensity;
 uniform vec3 ambientIntensity;
+uniform float cutoff;
+uniform float cutoffDistance;
 
 // Material properties
 uniform vec3 ambientCoeff;
@@ -30,6 +32,8 @@ void main()
 	vec3 normal = m;
     // Compute the light direction and view direction vectors
     vec3 lightDir = normalize(view_matrix * vec4(lightPos, 1) - viewPosition).xyz;
+    float lightDistance = distance(view_matrix * vec4(lightPos, 1), viewPosition);
+    
     vec3 viewDir = normalize(-viewPosition.xyz);
     float theta = dot(lightDir,normalize(torchDirection));
     
@@ -38,9 +42,15 @@ void main()
     vec3 reflectDir = normalize(reflect(-lightDir,m));
     vec3 specular;
     
-    if(theta > 0.9){
+    if(theta > cutoff && lightDistance < cutoffDistance){
     	
-    	diffuse = max(lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
+    	float maxDiff = 1.0 - cutoff;
+    	float diff = 1.0 - theta;
+    	float ratio = 1.0 - (diff/maxDiff);
+    	
+    	float Dist = 1.0 - (lightDistance/cutoffDistance); 
+    	
+    	diffuse = max(vec3(Dist,Dist,Dist)*vec3(ratio,ratio,ratio)*lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
     	
     	if (dot(normal,lightDir) > 0) 
     		specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);

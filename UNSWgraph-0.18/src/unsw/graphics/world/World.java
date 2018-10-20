@@ -87,13 +87,15 @@ public class World extends Application3D {
 		        Shader.setPoint3D(gl, "lightPos", avatar.getPosition());
 		        Shader.setPoint3D(gl, "torchDirection", new Point3D(0,0,1));
 		        
-		        Shader.setColor(gl, "lightIntensity", new Color(0.9f, 0.9f, 0.9f));
-		        Shader.setColor(gl, "ambientIntensity", new Color(0.2f, 0.2f, 0.2f));
+		        Shader.setColor(gl, "lightIntensity", Color.WHITE);
+		        Shader.setColor(gl, "ambientIntensity", new Color(0.1f, 0.1f, 0.1f));
 		        
 		        Shader.setColor(gl, "ambientCoeff", new Color(0.6f, 0.6f, 0.6f));
-		        Shader.setColor(gl, "diffuseCoeff", new Color(0.6f, 0.6f, 0.6f));
+		        Shader.setColor(gl, "diffuseCoeff", Color.WHITE);
 		        Shader.setColor(gl, "specularCoeff", new Color(0.1f, 0.1f, 0.1f));
 		        Shader.setFloat(gl, "phongExp", 32f);
+		        Shader.setFloat(gl, "cutoff", (float)Math.cos(26f*(Math.PI/180)));
+		        Shader.setFloat(gl, "cutoffDistance", 6.0f);
 				
 			}else{
 				
