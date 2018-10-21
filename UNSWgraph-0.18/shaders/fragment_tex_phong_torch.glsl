@@ -12,8 +12,7 @@ uniform vec3 torchDirection;
 uniform vec3 lightIntensity;
 uniform vec3 ambientIntensity;
 uniform float cutoff;
-uniform float AttenFactor;
-uniform float AttenFactorDist;
+uniform float cutoffDistance;
 
 // Material properties
 uniform vec3 ambientCoeff;
@@ -43,16 +42,18 @@ void main()
     vec3 reflectDir = normalize(reflect(-lightDir,m));
     vec3 specular;
     
-    if(theta > cutoff){
+    if(theta > cutoff && lightDistance < cutoffDistance){
     	
-    	float I = pow(theta,AttenFactor);
-    
-    	float D = 1.0 / (0.3 + (AttenFactorDist*lightDistance)); 
+    	float maxDiff = 1.0 - cutoff;
+    	float diff = 1.0 - theta;
+    	float ratio = 1.0 - (diff/maxDiff);
     	
-    	diffuse = max(vec3(D,D,D)*vec3(I,I,I)*lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
+    	float Dist = 1.0 - (lightDistance/cutoffDistance); 
+    	
+    	diffuse = max(vec3(Dist,Dist,Dist)*vec3(ratio,ratio,ratio)*lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
     	
     	if (dot(normal,lightDir) > 0) 
-    		specular = max(vec3(D,D,D)*lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
+    		specular = max(vec3(Dist,Dist,Dist)*vec3(ratio,ratio,ratio)*lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
     	else
 			specular = vec3(0);
     	
