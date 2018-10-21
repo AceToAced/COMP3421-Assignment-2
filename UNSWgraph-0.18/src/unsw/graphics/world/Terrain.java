@@ -218,7 +218,14 @@ public class Terrain {
 	              textureList.add(new Point2D(1,1));
                 }
             }
-            TriangleMesh mesh = new TriangleMesh(vertices, indices, true, textureList);
+            
+            ArrayList<Vector3> normals = new ArrayList<>();
+            
+            for(int i = 0; i < vertices.size(); i++){
+            	normals.add(new Vector3(0,1,0));
+            }
+            
+            TriangleMesh mesh = new TriangleMesh(vertices, normals,indices, textureList);
             this.roadMeshes.add(mesh);
         }
     }
