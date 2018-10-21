@@ -170,7 +170,7 @@ public class Terrain {
             Point2D startPoint = road.point(0);
             float altitude = altitude(startPoint.getX(), startPoint.getY());
             int roadSize = road.size();
-            float segments = 20f;
+            float segments = 100f;
             float dt = roadSize / segments;
             for(int inc = 0; inc < segments; inc++){
                 float t = inc*dt;
