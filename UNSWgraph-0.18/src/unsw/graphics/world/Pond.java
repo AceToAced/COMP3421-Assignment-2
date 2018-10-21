@@ -58,7 +58,7 @@ public class Pond {
 		this.ImgType = ImgType;
 		
 		this.scaleX = scaleX;
-		this.scaleZ = scaleX;
+		this.scaleZ = scaleZ;
 		Position = new Point3D(x,y,z);
 		textures = new ArrayList<Texture>();
 	}
