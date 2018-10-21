@@ -95,7 +95,7 @@ public class World extends Application3D {
 		        Shader.setColor(gl, "specularCoeff", new Color(0.1f, 0.1f, 0.1f));
 		        Shader.setFloat(gl, "phongExp", 32f);
 		        Shader.setFloat(gl, "cutoff", (float)Math.cos(26f*(Math.PI/180)));
-		        Shader.setFloat(gl, "cutoffDistance", 6.0f);
+		        Shader.setFloat(gl, "cutoffDistance", 4.0f);
 				
 			}else{
 				
