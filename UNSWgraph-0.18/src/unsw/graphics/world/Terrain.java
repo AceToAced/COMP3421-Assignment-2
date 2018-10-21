@@ -177,7 +177,7 @@ public class Terrain {
                 generateRoadVerticesAtPoint(t, road, altitude, vertices);
             }
             
-            // The origin
+            // Compute last segment 
             float t = roadSize - 1f + 0.99999f;
             generateRoadVerticesAtPoint(t, road, altitude, vertices);
             
