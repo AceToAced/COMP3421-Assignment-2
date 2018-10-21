@@ -53,7 +53,7 @@ void main()
     	diffuse = max(vec3(Dist,Dist,Dist)*vec3(ratio,ratio,ratio)*lightIntensity*diffuseCoeff*dot(normal,lightDir), 0.0);
     	
     	if (dot(normal,lightDir) > 0) 
-    		specular = max(lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
+    		specular = max(vec3(Dist,Dist,Dist)*vec3(ratio,ratio,ratio)*lightIntensity*specularCoeff*pow(dot(viewDir, reflectDir),phongExp), 0.0);
     	else
 			specular = vec3(0);
     	
