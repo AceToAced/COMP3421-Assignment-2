@@ -170,36 +170,17 @@ public class Terrain {
             Point2D startPoint = road.point(0);
             float altitude = altitude(startPoint.getX(), startPoint.getY());
             int roadSize = road.size();
-            float segments = 100f;
+            float segments = 40f;
             float dt = roadSize / segments;
             for(int inc = 0; inc < segments; inc++){
                 float t = inc*dt;
-                // The origin
-                Point2D origin2D = road.point(t);
-                Point3D origin = new Point3D(origin2D.getX(), altitude, origin2D.getY());
-                // Compute the frenet frame
-                Point2D tangent = road.pointDerivative(t);
-                System.out.println("tangent at t= " + Float.toString(t) + " is " + tangent.toString());
-                float k1 = tangent.getX();
-                float k2 = tangent.getY();
-                Vector3 k = new Vector3(k1, 0, k2).normalize();
-                Vector3 i = new Vector3(k2, 0, -k1).normalize();
-                Vector3 j = k.cross(i);
-                float[] values = new float[] {
-                        i.getX(), i.getY(), i.getZ(), 0, // i
-                        j.getX(), j.getY(), j.getZ(), 0, // j
-                        k.getX(), k.getY(), k.getZ(), 0, // k
-                        origin.getX(), origin.getY(), origin.getZ(), 1  // phi
-                };
-                Matrix4 frenetFrame = new Matrix4(values);
-                float roadWidth = (float) road.width()/2f;
-                Vector4 l1 = new Vector4(roadWidth, 0, 0, 1);
-                Vector4 l2 =  new Vector4(-roadWidth, 0, 0, 1);;
-                Point3D ml1 = frenetFrame.multiply(l1).asPoint3D();
-                Point3D ml2 = frenetFrame.multiply(l2).asPoint3D();
-                vertices.add(ml1);
-                vertices.add(ml2);
+                generateRoadVerticesAtPoint(t, road, altitude, vertices);
             }
+            
+            // The origin
+            float t = roadSize - 1f + 0.99999f;
+            generateRoadVerticesAtPoint(t, road, altitude, vertices);
+            
             List<Integer> indices = new ArrayList<>();
             List<Point2D> textureList = new ArrayList<>();
             for (int i = 0; i <= vertices.size() - 4; i += 4) {
@@ -240,6 +221,34 @@ public class Terrain {
             TriangleMesh mesh = new TriangleMesh(vertices, indices, true, textureList);
             this.roadMeshes.add(mesh);
         }
+    }
+    
+    public void generateRoadVerticesAtPoint(float t, Road road, float altitude, List<Point3D> vertices) {
+    	// The origin
+        Point2D origin2D = road.point(t);
+        Point3D origin = new Point3D(origin2D.getX(), altitude, origin2D.getY());
+        // Compute the frenet frame
+        Point2D tangent = road.pointDerivative(t);
+        System.out.println("tangent at t= " + Float.toString(t) + " is " + tangent.toString());
+        float k1 = tangent.getX();
+        float k2 = tangent.getY();
+        Vector3 k = new Vector3(k1, 0, k2).normalize();
+        Vector3 i = new Vector3(k2, 0, -k1).normalize();
+        Vector3 j = k.cross(i);
+        float[] values = new float[] {
+                i.getX(), i.getY(), i.getZ(), 0, // i
+                j.getX(), j.getY(), j.getZ(), 0, // j
+                k.getX(), k.getY(), k.getZ(), 0, // k
+                origin.getX(), origin.getY(), origin.getZ(), 1  // phi
+        };
+        Matrix4 frenetFrame = new Matrix4(values);
+        float roadWidth = (float) road.width()/2f;
+        Vector4 l1 = new Vector4(roadWidth, 0, 0, 1);
+        Vector4 l2 =  new Vector4(-roadWidth, 0, 0, 1);;
+        Point3D ml1 = frenetFrame.multiply(l1).asPoint3D();
+        Point3D ml2 = frenetFrame.multiply(l2).asPoint3D();
+        vertices.add(ml1);
+        vertices.add(ml2);
     }
 
 
